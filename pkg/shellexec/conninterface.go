@@ -136,11 +136,7 @@ func (cw CmdWrap) StderrPipe() (io.ReadCloser, error) {
 }
 
 func (cw CmdWrap) SetSize(termSize waveobj.TermSize) error {
-	err := pty.Setsize(cw.Pty, ptyutil.WinsizeFromTermSize(termSize))
-	if err != nil {
-		return err
-	}
-	return nil
+	return pty.Setsize(cw.Pty, ptyutil.WinsizeFromTermSize(termSize))
 }
 
 type SessionWrap struct {

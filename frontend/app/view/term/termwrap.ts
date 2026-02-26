@@ -649,7 +649,6 @@ export class TermWrap {
         this.fitAddon.fit();
         const newTermSize = this.getTermSize();
         if (!this.areTermSizesEqual(oldTermSize, newTermSize)) {
-            const termSize: TermSize = newTermSize;
             console.log(
                 "[termwrap] resize",
                 `${oldTermSize.rows}x${oldTermSize.cols}`,
@@ -658,7 +657,7 @@ export class TermWrap {
                 "atBottom:",
                 atBottom
             );
-            RpcApi.ControllerInputCommand(TabRpcClient, { blockid: this.blockId, termsize: termSize });
+            RpcApi.ControllerInputCommand(TabRpcClient, { blockid: this.blockId, termsize: newTermSize });
         }
         dlog(
             "resize",
