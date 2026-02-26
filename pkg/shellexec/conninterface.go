@@ -14,6 +14,7 @@ import (
 
 	"github.com/creack/pty"
 	"github.com/wavetermdev/waveterm/pkg/panichandler"
+	"github.com/wavetermdev/waveterm/pkg/util/ptyutil"
 	"github.com/wavetermdev/waveterm/pkg/util/unixutil"
 	"github.com/wavetermdev/waveterm/pkg/waveobj"
 	"github.com/wavetermdev/waveterm/pkg/wsl"
@@ -135,7 +136,7 @@ func (cw CmdWrap) StderrPipe() (io.ReadCloser, error) {
 }
 
 func (cw CmdWrap) SetSize(termSize waveobj.TermSize) error {
-	err := pty.Setsize(cw.Pty, winsizeFromTermSize(termSize))
+	err := pty.Setsize(cw.Pty, ptyutil.WinsizeFromTermSize(termSize))
 	if err != nil {
 		return err
 	}
