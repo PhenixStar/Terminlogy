@@ -614,6 +614,8 @@ function makeDefaultConnStatus(conn: string): ConnStatus {
             hasconnected: true,
             activeconnnum: 0,
             wshenabled: false,
+            moshenabled: false,
+            moshactive: false,
         };
     }
     return {
@@ -624,6 +626,8 @@ function makeDefaultConnStatus(conn: string): ConnStatus {
         hasconnected: false,
         activeconnnum: 0,
         wshenabled: false,
+        moshenabled: false,
+        moshactive: false,
     };
 }
 

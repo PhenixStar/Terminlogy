@@ -42,6 +42,7 @@ const (
 	ConnType_Local = "local"
 	ConnType_Wsl   = "wsl"
 	ConnType_Ssh   = "ssh"
+	ConnType_Mosh  = "mosh"
 )
 
 const (
@@ -320,15 +321,17 @@ func (sc *ShellController) run(logCtx context.Context, bdata *waveobj.Block, blo
 // [Include all the remaining private methods with bc replaced by sc]
 
 type ConnUnion struct {
-	ConnName   string
-	ConnType   string
-	SshConn    *conncontroller.SSHConn
-	WslConn    *wslconn.WslConn
-	WshEnabled bool
-	ShellPath  string
-	ShellOpts  []string
-	ShellType  string
-	HomeDir    string
+	ConnName    string
+	ConnType    string
+	SshConn     *conncontroller.SSHConn
+	WslConn     *wslconn.WslConn
+	WshEnabled  bool
+	MoshEnabled bool
+	MoshActive  bool // true when mosh is actually being used (not just enabled)
+	ShellPath   string
+	ShellOpts   []string
+	ShellType   string
+	HomeDir     string
 }
 
 func (bc *ShellController) getConnUnion(logCtx context.Context, remoteName string, blockMeta waveobj.MetaMapType) (ConnUnion, error) {
@@ -366,6 +369,17 @@ func (bc *ShellController) getConnUnion(logCtx context.Context, remoteName strin
 		rtn.ConnType = ConnType_Ssh
 		rtn.SshConn = conn
 		rtn.WshEnabled = wshEnabled && conn.WshEnabled.Load()
+
+		// Check if mosh is enabled for this connection
+		connConfig := wconfig.GetWatcher().GetFullConfig()
+		connSettings, connOk := connConfig.Connections[remoteName]
+		if connOk && connSettings.ConnMoshEnabled != nil && *connSettings.ConnMoshEnabled {
+			rtn.MoshEnabled = true
+		}
+		// Also check block-level meta override
+		if blockMeta.GetBool("conn:moshenabled", false) {
+			rtn.MoshEnabled = true
+		}
 	}
 	err := rtn.getRemoteInfoAndShellType(blockMeta)
 	if err != nil {
@@ -459,12 +473,29 @@ func (bc *ShellController) setupAndStartShellProcess(logCtx context.Context, rc 
 		}
 	} else if connUnion.ConnType == ConnType_Ssh {
 		conn := connUnion.SshConn
-		if !connUnion.WshEnabled {
+
+		// Attempt mosh if enabled. Mosh only supports interactive shells (not one-off commands)
+		// because mosh-client requires a PTY and maintains its own terminal state.
+		if connUnion.MoshEnabled && bc.ControllerType == BlockController_Shell {
+			blocklogger.Infof(logCtx, "[conndebug] mosh enabled, attempting mosh connection to %s\n", conn.Opts.SSHHost)
+			moshShellProc, moshErr := shellexec.StartMoshShellProc(ctx, logCtx, rc.TermSize, conn)
+			if moshErr != nil {
+				blocklogger.Infof(logCtx, "[conndebug] mosh failed, falling back to SSH: %v\n", moshErr)
+				bc.writeMutedMessageToTerminal("[mosh unavailable: " + moshErr.Error() + ", using SSH]")
+				// Fall through to normal SSH below
+			} else {
+				blocklogger.Infof(logCtx, "[conndebug] mosh connection established\n")
+				bc.writeMutedMessageToTerminal("[connected via mosh]")
+				shellProc = moshShellProc
+			}
+		}
+
+		if !connUnion.WshEnabled && shellProc == nil {
 			shellProc, err = shellexec.StartRemoteShellProcNoWsh(ctx, rc.TermSize, cmdStr, cmdOpts, conn)
 			if err != nil {
 				return nil, err
 			}
-		} else {
+		} else if shellProc == nil {
 			sockName := conn.GetDomainSocketName()
 			rpcContext := wshrpc.RpcContext{
 				ProcRoute: true,

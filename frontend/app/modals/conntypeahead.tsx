@@ -34,6 +34,7 @@ function filterConnections(
     return connList.filter((conn) => {
         const hidden = connectionsConfig?.[conn]?.["display:hidden"] ?? false;
         const wshEnabled = connectionsConfig?.[conn]?.["conn:wshenabled"] ?? true;
+        const moshEnabled = connectionsConfig?.[conn]?.["conn:moshenabled"] ?? false;
         return conn.includes(connSelected) && !hidden && (wshEnabled || !filterOutNowsh);
     });
 }

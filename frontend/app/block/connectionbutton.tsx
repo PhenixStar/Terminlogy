@@ -106,6 +106,15 @@ export const ConnectionButton = React.memo(
             const wshProblem = connection && !connStatus?.wshenabled && connStatus?.status == "connected";
             const showNoWshButton = wshProblem && !isLocal;
 
+            // Add mosh status detection
+            const isMoshActive = connStatus?.moshactive;
+            const isMoshEnabled = connStatus?.moshenabled;
+
+            // Update title text if mosh is active
+            if (isMoshActive) {
+                titleText = "Connected via Mosh to " + connection;
+            }
+
             return (
                 <>
                     <div

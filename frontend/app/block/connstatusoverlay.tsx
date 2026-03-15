@@ -163,6 +163,21 @@ export const ConnStatusOverlay = React.memo(
             }
         }, [connName, waveEnv]);
 
+        const handleDisableMosh = React.useCallback(async () => {
+            const metamaptype: unknown = {
+                "conn:moshenabled": false,
+            };
+            const data: ConnConfigRequest = {
+                host: connName,
+                metamaptype: metamaptype,
+            };
+            try {
+                await waveEnv.rpc.SetConnectionsConfigCommand(TabRpcClient, data);
+            } catch (e) {
+                console.log("problem setting connection config: ", e);
+            }
+        }, [connName, waveEnv]);
+
         const handleRemoveWshError = React.useCallback(async () => {
             try {
                 await waveEnv.rpc.DismissWshFailCommand(TabRpcClient, connName);
@@ -191,6 +206,8 @@ export const ConnStatusOverlay = React.memo(
         }
         const showIcon = connStatus.status != "connecting";
 
+        const moshConfigEnabled =
+            jotai.useAtomValue(waveEnv.getConnConfigKeyAtom(connName, "conn:moshenabled")) ?? false;
         React.useEffect(() => {
             const showWshErrorTemp =
                 connStatus.status == "connected" &&

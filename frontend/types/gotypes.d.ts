@@ -785,6 +785,7 @@ declare global {
         "conn:wshenabled"?: boolean;
         "conn:askbeforewshinstall"?: boolean;
         "conn:wshpath"?: string;
+        "conn:moshenabled"?: boolean;
         "conn:shellpath"?: string;
         "conn:ignoresshconfig"?: boolean;
         "display:hidden"?: boolean;
@@ -831,6 +832,8 @@ declare global {
         status: string;
         connhealthstatus?: string;
         wshenabled: boolean;
+        moshenabled: boolean;
+        moshactive: boolean;
         connection: string;
         connected: boolean;
         hasconnected: boolean;
@@ -1391,6 +1394,7 @@ declare global {
         "conn:*"?: boolean;
         "conn:askbeforewshinstall"?: boolean;
         "conn:wshenabled"?: boolean;
+        "conn:moshenabled"?: boolean;
         "conn:localhostdisplayname"?: string;
         "debug:*"?: boolean;
         "debug:pprofport"?: number;

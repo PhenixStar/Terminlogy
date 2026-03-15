@@ -457,6 +457,8 @@ type ConnStatus struct {
 	Status                        string `json:"status"`
 	ConnHealthStatus              string `json:"connhealthstatus,omitempty"`
 	WshEnabled                    bool   `json:"wshenabled"`
+	MoshEnabled                   bool   `json:"moshenabled"`
+	MoshActive                    bool   `json:"moshactive"`
 	Connection                    string `json:"connection"`
 	Connected                     bool   `json:"connected"`
 	HasConnected                  bool   `json:"hasconnected"` // true if it has *ever* connected successfully
