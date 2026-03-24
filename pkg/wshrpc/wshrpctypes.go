@@ -421,7 +421,9 @@ type RemoteInfo struct {
 }
 
 const (
-	TimeSeries_Cpu = "cpu"
+	TimeSeries_Cpu    = "cpu"
+	TimeSeries_Gpu    = "gpu"
+	TimeSeries_GpuMem = "gpu:mem"
 )
 
 type TimeSeriesData struct {

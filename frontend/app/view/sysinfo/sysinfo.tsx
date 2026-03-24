@@ -77,6 +77,24 @@ const PlotTypes: object = {
                 return valA - valB;
             });
     },
+    GPU: function (_dataItem: DataItem): Array<string> {
+        return ["gpu"];
+    },
+    "GPU + Mem": function (dataItem: DataItem): Array<string> {
+        return ["gpu", "gpu:mem:used"];
+    },
+    "All GPU": function (dataItem: DataItem): Array<string> {
+        return Object.keys(dataItem)
+            .filter((item) => item.match(/^gpu:\d+$/))
+            .sort((a, b) => {
+                const valA = parseInt(a.replace("gpu:", ""));
+                const valB = parseInt(b.replace("gpu:", ""));
+                return valA - valB;
+            });
+    },
+    "CPU + GPU": function (_dataItem: DataItem): Array<string> {
+        return ["cpu", "gpu"];
+    },
 };
 
 const DefaultPlotMeta = {
@@ -88,6 +106,37 @@ const DefaultPlotMeta = {
 };
 for (let i = 0; i < 32; i++) {
     DefaultPlotMeta[`cpu:${i}`] = defaultCpuMeta(`Core ${i}`);
+}
+
+function defaultGpuMeta(name: string): TimeSeriesMeta {
+    return {
+        name: name,
+        label: "%",
+        miny: 0,
+        maxy: 100,
+        color: "var(--sysinfo-gpu-color, #76b900)",
+        decimalPlaces: 0,
+    };
+}
+
+function defaultGpuMemMeta(name: string, maxY: string): TimeSeriesMeta {
+    return {
+        name: name,
+        label: "GB",
+        miny: 0,
+        maxy: maxY,
+        color: "var(--sysinfo-gpu-mem-color, #b9ff00)",
+        decimalPlaces: 1,
+    };
+}
+
+DefaultPlotMeta["gpu"] = defaultGpuMeta("GPU %");
+DefaultPlotMeta["gpu:mem:used"] = defaultGpuMemMeta("VRAM Used", "gpu:mem:total");
+DefaultPlotMeta["gpu:mem:total"] = defaultGpuMemMeta("VRAM Total", "gpu:mem:total");
+for (let i = 0; i < 8; i++) {
+    DefaultPlotMeta[`gpu:${i}`] = defaultGpuMeta(`GPU ${i}`);
+    DefaultPlotMeta[`gpu:mem:${i}:used`] = defaultGpuMemMeta(`GPU ${i} VRAM Used`, `gpu:mem:${i}:total`);
+    DefaultPlotMeta[`gpu:mem:${i}:total`] = defaultGpuMemMeta(`GPU ${i} VRAM Total`, `gpu:mem:${i}:total`);
 }
 
 function convertWaveEventToDataItem(event: Extract<WaveEvent, { event: "sysinfo" }>): DataItem {
