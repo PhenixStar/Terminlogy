@@ -380,6 +380,13 @@ declare global {
         restoretofilename: string;
     };
 
+    // wshrpc.CommandFileStreamData
+    type CommandFileStreamData = {
+        info: FileInfo;
+        byterange?: string;
+        streammeta: StreamMeta;
+    };
+
     // wshrpc.CommandGetMetaData
     type CommandGetMetaData = {
         oref: ORef;
@@ -519,6 +526,13 @@ declare global {
     type CommandRemoteFileMultiInfoData = {
         cwd: string;
         paths: string[];
+    };
+
+    // wshrpc.CommandRemoteFileStreamData
+    type CommandRemoteFileStreamData = {
+        path: string;
+        byterange?: string;
+        streammeta: StreamMeta;
     };
 
     // wshrpc.CommandRemoteListEntriesData
@@ -1401,6 +1415,7 @@ declare global {
         "debug:*"?: boolean;
         "debug:pprofport"?: number;
         "debug:pprofmemprofilerate"?: number;
+        "debug:webglstatus"?: boolean;
         "tsunami:*"?: boolean;
         "tsunami:scaffoldpath"?: string;
         "tsunami:sdkreplacepath"?: string;

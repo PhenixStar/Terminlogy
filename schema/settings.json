@@ -328,6 +328,9 @@
         "debug:pprofmemprofilerate": {
           "type": "integer"
         },
+        "debug:webglstatus": {
+          "type": "boolean"
+        },
         "tsunami:*": {
           "type": "boolean"
         },
