@@ -15,6 +15,32 @@ Infrastructure monitoring widgets and context-aware companion tools for WaveTerm
 | `companion.sh` | Interactive context-aware tool picker |
 | `ctx-launch.sh` | Core context-aware launcher (used by aliases) |
 
+## Widget State Persistence
+
+Widgets persist their last-known summary across restarts using WaveTerm's `wsh setvar/getvar` API.
+
+### How it works
+
+- **Bash widgets** source `lib/widget-state.sh` which exposes two functions:
+  ```bash
+  widget_save_state <key> <value>   # stores via: wsh setvar "widget:state:<key>" <value>
+  widget_load_state <key>           # reads via:  wsh getvar "widget:state:<key>"
+  ```
+- **PowerShell widgets** include inline `Save-WidgetState` / `Load-WidgetState` functions with the same semantics.
+- Both implementations fail silently when `wsh` is unavailable (e.g. running outside WaveTerm).
+
+### Cold-start behavior
+
+On launch, each widget checks for a cached summary and displays it immediately while waiting for the first SSH poll to complete. This avoids a blank screen during the initial connection delay.
+
+### State keys
+
+| Widget | Key | Value format |
+|--------|-----|--------------|
+| `docker-manager.sh` | `docker:summary` | `<running>/<total>` |
+| `cf-tunnel-status.sh` | `cf-tunnels:summary` | `<healthy>/<total>` |
+| `ssh-health.ps1` | `ssh-health:summary` | `<ok>ok/<total>total` |
+
 ## Context-Aware Companion System
 
 The companion system lets you launch tools (btop, lazygit, htop, etc.) that automatically inherit your current SSH connection and working directory.

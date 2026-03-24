@@ -1,0 +1,24 @@
+{
+  "name": "MikroTik Audit",
+  "description": "MikroTik router audit and monitoring dashboard",
+  "tabs": [
+    {
+      "title": "Router Status",
+      "tab:connection": "admin@mikrotik",
+      "blocks": [
+        {"view": "term", "controller": "cmd", "cmd": "/interface print", "cmd:runonstart": true},
+        {"view": "term", "controller": "cmd", "cmd": "/ip address print", "cmd:runonstart": true},
+        {"view": "term", "controller": "cmd", "cmd": "/ip route print", "cmd:runonstart": true},
+        {"view": "term", "controller": "shell"}
+      ]
+    },
+    {
+      "title": "Firewall & NAT",
+      "tab:connection": "admin@mikrotik",
+      "blocks": [
+        {"view": "term", "controller": "cmd", "cmd": "/ip firewall filter print", "cmd:runonstart": true},
+        {"view": "term", "controller": "cmd", "cmd": "/ip firewall nat print", "cmd:runonstart": true}
+      ]
+    }
+  ]
+}

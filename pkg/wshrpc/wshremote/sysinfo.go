@@ -24,7 +24,7 @@ import (
 const BYTES_PER_GB = 1073741824
 const BYTES_PER_MB = 1048576
 
-// delta state for disk I/O rates
+// delta state for disk/net I/O rates + GPU tick counter
 var (
 	diskMu        sync.Mutex
 	prevDiskRead  uint64
@@ -32,6 +32,7 @@ var (
 	prevNetRx     uint64
 	prevNetTx     uint64
 	prevTs        time.Time
+	gpuTickCount  int
 )
 
 func getCpuData(values map[string]float64) {
@@ -71,9 +72,8 @@ func getDiskData(values map[string]float64) {
 			totalWrite += c.WriteBytes
 		}
 		diskMu.Lock()
-		now := time.Now()
-		if !prevTs.IsZero() {
-			elapsed := now.Sub(prevTs).Seconds()
+		if !prevTs.IsZero() && totalRead >= prevDiskRead && totalWrite >= prevDiskWrite {
+			elapsed := time.Since(prevTs).Seconds()
 			if elapsed > 0 {
 				values[wshrpc.TimeSeries_Disk+":read"] = float64(totalRead-prevDiskRead) / elapsed / BYTES_PER_MB
 				values[wshrpc.TimeSeries_Disk+":write"] = float64(totalWrite-prevDiskWrite) / elapsed / BYTES_PER_MB
@@ -97,9 +97,8 @@ func getNetData(values map[string]float64) {
 	}
 	agg := counters[0]
 	diskMu.Lock()
-	now := time.Now()
-	if !prevTs.IsZero() {
-		elapsed := now.Sub(prevTs).Seconds()
+	if !prevTs.IsZero() && agg.BytesRecv >= prevNetRx && agg.BytesSent >= prevNetTx {
+		elapsed := time.Since(prevTs).Seconds()
 		if elapsed > 0 {
 			values[wshrpc.TimeSeries_Net+":rx"] = float64(agg.BytesRecv-prevNetRx) / elapsed / BYTES_PER_MB
 			values[wshrpc.TimeSeries_Net+":tx"] = float64(agg.BytesSent-prevNetTx) / elapsed / BYTES_PER_MB
@@ -153,12 +152,16 @@ func generateSingleServerData(client *wshutil.WshRpc, connName string) {
 	values := make(map[string]float64)
 	getCpuData(values)
 	getMemData(values)
-	getGpuData(values)
 	getDiskData(values)
 	getNetData(values)
+	// GPU data is expensive (exec nvidia-smi) — collect every 5 ticks instead of every tick
 	diskMu.Lock()
+	gpuTickCount++
 	prevTs = now
 	diskMu.Unlock()
+	if gpuTickCount%5 == 1 {
+		getGpuData(values)
+	}
 	tsData := wshrpc.TimeSeriesData{Ts: now.UnixMilli(), Values: values}
 	event := wps.WaveEvent{
 		Event:   wps.Event_SysInfo,

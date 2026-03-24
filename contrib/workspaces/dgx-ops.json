@@ -1,0 +1,16 @@
+{
+  "name": "DGX Ops",
+  "description": "DGX1 V100 monitoring dashboard",
+  "tabs": [
+    {
+      "title": "DGX Ops",
+      "tab:connection": "phenix@dgx",
+      "blocks": [
+        {"view": "sysinfo", "sysinfo:type": "Dials", "graph:numpoints": 120},
+        {"view": "sysinfo", "sysinfo:type": "All GPU", "graph:numpoints": 120},
+        {"view": "term", "controller": "cmd", "cmd": "docker ps --format 'table {{.Names}}\\t{{.Status}}'", "cmd:runonstart": true},
+        {"view": "term", "controller": "shell"}
+      ]
+    }
+  ]
+}

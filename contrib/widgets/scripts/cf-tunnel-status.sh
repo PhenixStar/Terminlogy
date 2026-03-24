@@ -9,6 +9,10 @@ SSH_USER="phenix"
 SSH_KEY="${HOME}/.ssh/id_ed25519"
 POLL_INTERVAL=30
 
+# Load state persistence library
+# shellcheck source=../lib/widget-state.sh
+source "$(dirname "$0")/../lib/widget-state.sh"
+
 # ── Tunnel → domain mapping ───────────────────────────────────────────────────
 declare -A DOMAIN_MAP=(
   [voicebox]="voice.nulled.ai"
@@ -115,9 +119,20 @@ render() {
   printf "${DIM}%s${RESET}\n" "$(printf '─%.0s' {1..87})"
   printf "  ${GREEN}%d healthy${RESET}  ${RED}%d down${RESET}  ${DIM}%d total${RESET}\n" \
     "${healthy}" "${down}" "${total}"
+
+  # Persist tunnel summary for next cold-start render
+  widget_save_state "cf-tunnels:summary" "${healthy}/${total}"
 }
 
 # ── Main loop ─────────────────────────────────────────────────────────────────
+# Show cached summary on first render while waiting for SSH
+_cf_cached=$(widget_load_state "cf-tunnels:summary")
+if [[ -n "${_cf_cached}" ]]; then
+  clear_screen
+  printf "${BOLD}${CYAN}Cloudflare Tunnels — dgx-station${RESET}  ${DIM}Loading... (cached: ${_cf_cached} healthy/total)${RESET}\n"
+fi
+unset _cf_cached
+
 while true; do
   clear_screen
   print_header

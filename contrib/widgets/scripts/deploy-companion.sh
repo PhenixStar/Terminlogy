@@ -62,11 +62,14 @@ RESET="${ESC}[0m"
 deploy_to() {
     local name="$1"
     local ssh_args="$2"
+    # Split into array safely (word-splitting is intentional here for SSH arg passing)
+    local -a ssh_arr
+    read -ra ssh_arr <<< "$ssh_args"
 
     echo -e "${CYAN}Deploying to ${name}...${RESET}"
 
     # Create remote directory
-    if ! ssh -o ConnectTimeout=8 -o BatchMode=yes $ssh_args "mkdir -p ~/$REMOTE_DIR" 2>/dev/null; then
+    if ! ssh -o ConnectTimeout=8 -o BatchMode=yes "${ssh_arr[@]}" "mkdir -p ~/$REMOTE_DIR" 2>/dev/null; then
         echo -e "  ${RED}FAIL${RESET} — SSH connection failed"
         return 1
     fi
@@ -91,7 +94,7 @@ deploy_to() {
     done
 
     # Generate and deploy aliases file
-    generate_aliases | ssh -o BatchMode=yes $ssh_args "cat > ~/$REMOTE_ALIASES && chmod +x ~/$REMOTE_DIR/*.sh" 2>/dev/null
+    generate_aliases | ssh -o BatchMode=yes "${ssh_arr[@]}" "cat > ~/$REMOTE_ALIASES && chmod +x ~/$REMOTE_DIR/*.sh" 2>/dev/null
     if [[ $? -eq 0 ]]; then
         echo -e "  ${GREEN}OK${RESET} aliases.sh (generated)"
     else

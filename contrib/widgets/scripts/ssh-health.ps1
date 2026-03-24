@@ -11,6 +11,23 @@ $ConnectionsFile = "$env:USERPROFILE\.config\waveterm\connections.json"
 $PollInterval    = 30   # seconds
 $SSHTimeout      = 5    # seconds
 
+# ── Widget state persistence (wsh setvar/getvar) ──────────────────────────────
+function Save-WidgetState {
+    param([string]$Key, [string]$Value)
+    try {
+        & wsh setvar "widget:state:$Key" $Value 2>$null | Out-Null
+    } catch {}
+}
+
+function Load-WidgetState {
+    param([string]$Key)
+    try {
+        $result = & wsh getvar "widget:state:$Key" 2>$null
+        if ($LASTEXITCODE -eq 0 -and $result) { return $result }
+    } catch {}
+    return ""
+}
+
 # ANSI color codes
 $ESC   = [char]27
 $Reset = "$ESC[0m"
@@ -223,6 +240,11 @@ function Render-Table {
     $summary = $summaryParts -join "   "
     Write-Host "  ${Dim}${total} connections${Reset}   ${summary}"
     Write-Host "  ${ColorGray}${Dim}Refreshes every ${PollInterval}s  •  Ctrl+C to exit${Reset}"
+
+    # Persist connection summary for next cold-start render
+    if (-not $Checking) {
+        Save-WidgetState -Key "ssh-health:summary" -Value "${ok}ok/${total}total"
+    }
 }
 
 # ── Main loop ────────────────────────────────────────────────────────────────
@@ -232,6 +254,13 @@ function Render-Table {
 
 # Hide cursor for cleaner rendering
 Write-Host -NoNewline "$ESC[?25l"
+
+# Show cached summary on first render while connections are being tested
+$_cachedSummary = Load-WidgetState -Key "ssh-health:summary"
+if ($_cachedSummary) {
+    [System.Console]::Clear()
+    Write-Host "${Bold}${ColorCyan}  SSH Health Monitor${Reset}  ${ColorGray}(Loading... cached: ${_cachedSummary})${Reset}"
+}
 
 try {
     while ($true) {

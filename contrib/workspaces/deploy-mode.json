@@ -1,0 +1,21 @@
+{
+  "name": "Deploy Mode",
+  "description": "Multi-host deployment coordination workspace",
+  "tabs": [
+    {
+      "title": "DGX1 Deploy",
+      "tab:connection": "phenix@dgx",
+      "blocks": [
+        {"view": "term", "controller": "cmd", "cmd": "docker ps --format 'table {{.Names}}\\t{{.Image}}\\t{{.Status}}'", "cmd:runonstart": true},
+        {"view": "term", "controller": "shell"}
+      ]
+    },
+    {
+      "title": "Local",
+      "blocks": [
+        {"view": "term", "controller": "shell"},
+        {"view": "files"}
+      ]
+    }
+  ]
+}

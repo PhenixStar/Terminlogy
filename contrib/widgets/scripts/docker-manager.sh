@@ -10,6 +10,10 @@ SSH_KEY="$HOME/.ssh/id_ed25519"
 DISPLAY_HOST="dgx-station"
 REFRESH=15
 
+# Load state persistence library
+# shellcheck source=../lib/widget-state.sh
+source "$(dirname "$0")/../lib/widget-state.sh"
+
 # ANSI color codes
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -121,6 +125,9 @@ fetch_and_display() {
 
     local total=$((running + stopped))
 
+    # Persist container summary for next cold-start render
+    widget_save_state "docker:summary" "${running}/${total}"
+
     # Running containers first
     if [ ${#running_lines[@]} -gt 0 ]; then
         for line in "${running_lines[@]}"; do
@@ -140,7 +147,14 @@ fetch_and_display() {
     echo -e "  ${GREEN}${running} running${RESET}  |  ${RED}${stopped} stopped${RESET}  |  ${BOLD}${total} total${RESET}"
 }
 
-# Main loop
+# Main loop — show cached summary on first render while waiting for SSH
+_cached_summary=$(widget_load_state "docker:summary")
+if [ -n "$_cached_summary" ]; then
+    clear
+    echo -e "${BOLD}${CYAN}Docker Manager${RESET}  |  Host: ${BOLD}${DISPLAY_HOST}${RESET}  |  ${GRAY}Loading... (cached: ${_cached_summary} running/total)${RESET}"
+fi
+unset _cached_summary
+
 while true; do
     fetch_and_display
     sleep "$REFRESH"
