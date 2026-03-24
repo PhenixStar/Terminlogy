@@ -1384,6 +1384,7 @@ declare global {
         "preview:defaultsort"?: string;
         "tab:preset"?: string;
         "tab:confirmclose"?: boolean;
+        "tab:connection"?: string;
         "widget:*"?: boolean;
         "widget:showhelp"?: boolean;
         "window:*"?: boolean;
