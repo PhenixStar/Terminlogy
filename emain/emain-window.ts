@@ -190,12 +190,16 @@ export class WaveBrowserWindow extends BaseWindow {
                 winOpts.backgroundColor = "#222222";
             }
         } else if (opts.unamePlatform === "win32") {
-            winOpts.titleBarStyle = "hidden";
-            winOpts.titleBarOverlay = {
-                color: "#222222",
-                symbolColor: "#c3c8c2",
-                height: 32,
-            };
+            if (settings["window:nativetitlebar"]) {
+                winOpts.titleBarStyle = "default";
+            } else {
+                winOpts.titleBarStyle = "hidden";
+                winOpts.titleBarOverlay = {
+                    color: "#222222",
+                    symbolColor: "#c3c8c2",
+                    height: 32,
+                };
+            }
             if (isTransparent) {
                 winOpts.transparent = true;
             } else if (isBlur) {
