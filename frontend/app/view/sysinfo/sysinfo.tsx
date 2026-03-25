@@ -108,6 +108,24 @@ const PlotTypes: object = {
     "All Metrics": function (_dataItem: DataItem): Array<string> {
         return ["cpu", "mem:used", "gpu", "disk:read", "disk:write", "net:rx", "net:tx"];
     },
+    "GPU Temp": function (dataItem: DataItem): Array<string> {
+        return Object.keys(dataItem)
+            .filter((k) => k.match(/^gpu:\d+:temp$/))
+            .sort((a, b) => {
+                const idxA = parseInt(a.split(":")[1]);
+                const idxB = parseInt(b.split(":")[1]);
+                return idxA - idxB;
+            });
+    },
+    "GPU Power": function (dataItem: DataItem): Array<string> {
+        return Object.keys(dataItem)
+            .filter((k) => k.match(/^gpu:\d+:power$/))
+            .sort((a, b) => {
+                const idxA = parseInt(a.split(":")[1]);
+                const idxB = parseInt(b.split(":")[1]);
+                return idxA - idxB;
+            });
+    },
     Dials: function (_dataItem: DataItem): Array<string> {
         return ["cpu", "mem:used", "gpu"];
     },
@@ -153,6 +171,22 @@ for (let i = 0; i < 8; i++) {
     DefaultPlotMeta[`gpu:${i}`] = defaultGpuMeta(`GPU ${i}`);
     DefaultPlotMeta[`gpu:mem:${i}:used`] = defaultGpuMemMeta(`GPU ${i} VRAM Used`, `gpu:mem:${i}:total`);
     DefaultPlotMeta[`gpu:mem:${i}:total`] = defaultGpuMemMeta(`GPU ${i} VRAM Total`, `gpu:mem:${i}:total`);
+    DefaultPlotMeta[`gpu:${i}:temp`] = {
+        name: `GPU ${i} Temp`,
+        label: "°C",
+        miny: 0,
+        maxy: 110,
+        color: "var(--sysinfo-gpu-temp-color, #ef4444)",
+        decimalPlaces: 0,
+    } as TimeSeriesMeta;
+    DefaultPlotMeta[`gpu:${i}:power`] = {
+        name: `GPU ${i} Power`,
+        label: "W",
+        miny: 0,
+        maxy: null,
+        color: "var(--sysinfo-gpu-power-color, #f59e0b)",
+        decimalPlaces: 0,
+    } as TimeSeriesMeta;
 }
 
 function defaultDiskMeta(name: string): TimeSeriesMeta {

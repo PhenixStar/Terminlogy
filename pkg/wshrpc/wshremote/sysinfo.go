@@ -35,6 +35,20 @@ var (
 	gpuTickCount  int
 )
 
+// nvidiaAvailable is checked once at startup to avoid repeated PATH lookups.
+var (
+	nvidiaOnce      sync.Once
+	nvidiaAvailable bool
+)
+
+func checkNvidiaAvailable() bool {
+	nvidiaOnce.Do(func() {
+		_, err := exec.LookPath("nvidia-smi")
+		nvidiaAvailable = err == nil
+	})
+	return nvidiaAvailable
+}
+
 func getCpuData(values map[string]float64) {
 	percentArr, err := cpu.Percent(0, false)
 	if err != nil {
@@ -112,8 +126,11 @@ func getNetData(values map[string]float64) {
 }
 
 func getGpuData(values map[string]float64) {
+	if !checkNvidiaAvailable() {
+		return
+	}
 	out, err := exec.Command("nvidia-smi",
-		"--query-gpu=utilization.gpu,memory.used,memory.total",
+		"--query-gpu=utilization.gpu,memory.used,memory.total,temperature.gpu,power.draw",
 		"--format=csv,noheader,nounits").Output()
 	if err != nil {
 		return
@@ -132,9 +149,22 @@ func getGpuData(values map[string]float64) {
 		if err1 != nil || err2 != nil || err3 != nil {
 			continue
 		}
-		values[wshrpc.TimeSeries_Gpu+":"+strconv.Itoa(idx)] = util
-		values[wshrpc.TimeSeries_GpuMem+":"+strconv.Itoa(idx)+":used"] = memUsed / 1024 // MiB to GiB
-		values[wshrpc.TimeSeries_GpuMem+":"+strconv.Itoa(idx)+":total"] = memTotal / 1024
+		idxStr := strconv.Itoa(idx)
+		values[wshrpc.TimeSeries_Gpu+":"+idxStr] = util
+		values[wshrpc.TimeSeries_GpuMem+":"+idxStr+":used"] = memUsed / 1024 // MiB to GiB
+		values[wshrpc.TimeSeries_GpuMem+":"+idxStr+":total"] = memTotal / 1024
+		// temperature (°C) — field index 3
+		if len(parts) >= 4 {
+			if temp, err := strconv.ParseFloat(strings.TrimSpace(parts[3]), 64); err == nil {
+				values[wshrpc.TimeSeries_Gpu+":"+idxStr+":temp"] = temp
+			}
+		}
+		// power draw (W) — field index 4; nvidia-smi returns "[N/A]" on some cards
+		if len(parts) >= 5 {
+			if power, err := strconv.ParseFloat(strings.TrimSpace(parts[4]), 64); err == nil {
+				values[wshrpc.TimeSeries_Gpu+":"+idxStr+":power"] = power
+			}
+		}
 		totalUtil += util
 		totalMemUsed += memUsed
 		totalMemTotal += memTotal
