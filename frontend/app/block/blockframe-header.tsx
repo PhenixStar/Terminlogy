@@ -15,6 +15,8 @@ import { recordTEvent, refocusNode } from "@/app/store/global";
 import { globalStore } from "@/app/store/jotaiStore";
 import { uxCloseBlock } from "@/app/store/keymodel";
 import { TabRpcClient } from "@/app/store/wshrpcutil";
+import { makeORef } from "@/store/wos";
+import { fireAndForget } from "@/util/util";
 import { useWaveEnv } from "@/app/waveenv/waveenv";
 import { IconButton } from "@/element/iconbutton";
 import { NodeModel } from "@/layout/index";
@@ -35,11 +37,26 @@ function handleHeaderContextMenu(
     e.preventDefault();
     e.stopPropagation();
     const magnified = globalStore.get(nodeModel.isMagnified);
+    const pinHeader = (globalStore.get(blockEnv.getBlockMetaKeyAtom(blockId, "frame:pinheader")) as boolean) ?? false;
     const menu: ContextMenuItem[] = [
         {
             label: magnified ? "Un-Magnify Block" : "Magnify Block",
             click: () => {
                 nodeModel.toggleMagnify();
+            },
+        },
+        { type: "separator" },
+        {
+            label: "Pin Header",
+            type: "checkbox",
+            checked: pinHeader,
+            click: () => {
+                fireAndForget(() =>
+                    blockEnv.rpc.SetMetaCommand(TabRpcClient, {
+                        oref: makeORef("block", blockId),
+                        meta: { "frame:pinheader": !pinHeader },
+                    })
+                );
             },
         },
         { type: "separator" },

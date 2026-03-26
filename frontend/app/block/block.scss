@@ -272,6 +272,44 @@
             }
         }
 
+        // Compact header mode: collapse header to a 4px accent strip when unfocused and not hovered.
+        // The 300ms delay on collapse prevents flicker when moving mouse between blocks.
+        &.block-compact-header:not(.block-focused) {
+            .block-frame-default-header {
+                transition:
+                    max-height 150ms ease-in-out 300ms,
+                    min-height 150ms ease-in-out 300ms,
+                    opacity 150ms ease-in-out 300ms,
+                    padding 150ms ease-in-out 300ms,
+                    border-bottom-color 150ms ease-in-out 300ms;
+                max-height: 4px;
+                min-height: 4px;
+                opacity: 0;
+                padding: 0;
+                pointer-events: none;
+                border-bottom-color: var(--compact-accent, var(--accent-color));
+                overflow: hidden;
+            }
+        }
+
+        &.block-compact-header:not(.block-focused):hover {
+            .block-frame-default-header {
+                transition:
+                    max-height 150ms ease-in-out 0ms,
+                    min-height 150ms ease-in-out 0ms,
+                    opacity 150ms ease-in-out 0ms,
+                    padding 150ms ease-in-out 0ms,
+                    border-bottom-color 150ms ease-in-out 0ms;
+                max-height: var(--header-height);
+                min-height: var(--header-height);
+                opacity: 1;
+                padding: 4px 5px 4px 7px;
+                pointer-events: auto;
+                border-bottom-color: var(--border-color);
+                overflow: visible;
+            }
+        }
+
         --magnified-block-opacity: 0.6;
         --magnified-block-blur: 10px;
 
