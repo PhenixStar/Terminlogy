@@ -1,16 +1,16 @@
 {
-    "name": "waveterm",
+    "name": "terminolgy",
     "author": {
-        "name": "Command Line Inc",
-        "email": "info@commandline.dev"
+        "name": "Nulled AI",
+        "email": "dev@nulled.ai"
     },
-    "productName": "Wave",
-    "description": "Open-Source AI-Native Terminal Built for Seamless Workflows",
+    "productName": "Terminolgy",
+    "description": "AI-Native Infrastructure Terminal — GPU sysinfo, multi-machine dashboard, command palette",
     "license": "Apache-2.0",
-    "version": "0.14.3",
-    "homepage": "https://waveterm.dev",
+    "version": "0.1.0",
+    "homepage": "https://nulled.ai",
     "build": {
-        "appId": "dev.commandline.waveterm"
+        "appId": "ai.nulled.terminolgy"
     },
     "private": true,
     "main": "./dist/main/index.js",

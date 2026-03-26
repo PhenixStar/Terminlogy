@@ -30,9 +30,9 @@ const waveDirNamePrefix = "waveterm";
 const waveDirNameSuffix = isDev ? "dev" : "";
 const waveDirName = `${waveDirNamePrefix}${waveDirNameSuffix ? `-${waveDirNameSuffix}` : ""}`;
 
-const paths = envPaths("waveterm", { suffix: waveDirNameSuffix });
+const paths = envPaths("terminolgy", { suffix: waveDirNameSuffix });
 
-app.setName(isDev ? "Wave (Dev)" : "Wave");
+app.setName(isDev ? "Terminolgy (Dev)" : "Terminolgy");
 const unamePlatform = process.platform;
 const unameArch: string = process.arch;
 keyutil.setKeyUtilPlatform(unamePlatform);
