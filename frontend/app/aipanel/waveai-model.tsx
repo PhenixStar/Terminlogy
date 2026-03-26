@@ -201,7 +201,8 @@ export class WaveAIModel {
 
     async addFileFromRemoteUri(draggedFile: DraggedFile): Promise<void> {
         if (draggedFile.isDir) {
-            this.setError("Cannot add directories to Wave AI. Please select a file.");
+            // REBRAND: "Wave AI" → "Terminolgy AI"
+            this.setError("Cannot add directories to Terminolgy AI. Please select a file.");
             return;
         }
 
@@ -212,7 +213,8 @@ export class WaveAIModel {
                 return;
             }
             if (fileInfo.isdir) {
-                this.setError("Cannot add directories to Wave AI. Please select a file.");
+                // REBRAND: "Wave AI" → "Terminolgy AI"
+            this.setError("Cannot add directories to Terminolgy AI. Please select a file.");
                 return;
             }
 

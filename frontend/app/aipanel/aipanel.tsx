@@ -92,11 +92,13 @@ const AIWelcomeMessage = memo(() => {
         <div className="text-secondary py-8">
             <div className="text-center">
                 <i className="fa fa-sparkles text-4xl text-accent mb-2 block"></i>
-                <p className="text-lg font-bold text-primary">Welcome to Wave AI</p>
+                {/* REBRAND: "Welcome to Wave AI" → "Welcome to Terminolgy AI" */}
+                <p className="text-lg font-bold text-primary">Welcome to Terminolgy AI</p>
             </div>
             <div className="mt-4 text-left max-w-md mx-auto">
                 <p className="text-sm mb-6">
-                    Wave AI is your terminal assistant with context. I can read your terminal output, analyze widgets,
+                    {/* REBRAND: "Wave AI" → "Terminolgy AI" */}
+                    Terminolgy AI is your terminal assistant with context. I can read your terminal output, analyze widgets,
                     access files, and help you solve problems faster.
                 </p>
                 <div className="bg-accent/10 border border-accent/30 rounded-lg p-4">

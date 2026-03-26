@@ -277,7 +277,8 @@ electronApp.on("before-quit", (e) => {
             type: "question",
             buttons: ["Cancel", "Quit"],
             title: "Confirm Quit",
-            message: "Are you sure you want to quit Wave Terminal?",
+            // REBRAND: quit confirmation message changed from "Wave Terminal" to "Terminolgy"
+            message: "Are you sure you want to quit Terminolgy?",
             defaultId: 0,
             cancelId: 0,
         });

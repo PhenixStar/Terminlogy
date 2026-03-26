@@ -37,7 +37,8 @@ import { createElement } from "react";
 import { createRoot } from "react-dom/client";
 
 const platform = getApi().getPlatform();
-document.title = `Wave Terminal`;
+// REBRAND: "Wave Terminal" → "Terminolgy"
+document.title = `Terminolgy`;
 let savedInitOpts: WaveInitOpts = null;
 
 (window as any).WOS = WOS;
@@ -113,7 +114,8 @@ async function reinitWave() {
     const initialTab = await WOS.reloadWaveObject<Tab>(WOS.makeORef("tab", savedInitOpts.tabId));
     await WOS.reloadWaveObject<LayoutState>(WOS.makeORef("layout", initialTab.layoutstate));
     reloadAllWorkspaceTabs(ws);
-    document.title = `Wave Terminal - ${initialTab.name}`; // TODO update with tab name change
+    // REBRAND: "Wave Terminal" → "Terminolgy"
+    document.title = `Terminolgy - ${initialTab.name}`; // TODO update with tab name change
     getApi().setWindowInitStatus("wave-ready");
     globalStore.set(atoms.reinitVersion, globalStore.get(atoms.reinitVersion) + 1);
     globalStore.set(atoms.updaterStatusAtom, getApi().getUpdaterStatus());
@@ -182,7 +184,8 @@ async function initWave(initOpts: WaveInitOpts) {
         ]);
         loadAllWorkspaceTabs(ws);
         WOS.wpsSubscribeToObject(WOS.makeORef("workspace", waveWindow.workspaceid));
-        document.title = `Wave Terminal - ${initialTab.name}`; // TODO update with tab name change
+        // REBRAND: "Wave Terminal" → "Terminolgy"
+        document.title = `Terminolgy - ${initialTab.name}`; // TODO update with tab name change
     } catch (e) {
         console.error("Failed initialization error", e);
         getApi().sendLog("Error in initialization (wave.ts, loading required objects) " + e.message + "\n" + e.stack);

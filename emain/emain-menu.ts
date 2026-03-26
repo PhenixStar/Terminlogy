@@ -146,8 +146,9 @@ function makeFileMenu(
     ];
     const featureWaveAppBuilder = fullConfig?.settings?.["feature:waveappbuilder"];
     if (isDev || featureWaveAppBuilder) {
+        // REBRAND: menu label changed from "New WaveApp Builder Window" to "New Terminolgy App Builder Window"
         fileMenu.splice(1, 0, {
-            label: "New WaveApp Builder Window",
+            label: "New Terminolgy App Builder Window",
             accelerator: unamePlatform === "darwin" ? "Command+Shift+B" : "Alt+Shift+B",
             click: () => openBuilderWindow(""),
         });
@@ -173,8 +174,9 @@ function makeFileMenu(
 
 function makeAppMenuItems(webContents: electron.WebContents): Electron.MenuItemConstructorOptions[] {
     const appMenuItems: Electron.MenuItemConstructorOptions[] = [
+        // REBRAND: menu label changed from "About Wave Terminal" to "About Terminolgy"
         {
-            label: "About Wave Terminal",
+            label: "About Terminolgy",
             click: (_, window) => {
                 (getWindowWebContents(window) ?? webContents)?.send("menu-item-about");
             },

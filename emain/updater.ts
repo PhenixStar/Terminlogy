@@ -92,9 +92,10 @@ export class Updater {
 
             // Display the update banner and create a system notification
             this.status = "ready";
+            // REBRAND: system notification title/body changed from "Wave Terminal" to "Terminolgy"
             const updateNotification = new Notification({
-                title: "Wave Terminal",
-                body: "A new version of Wave Terminal is ready to install.",
+                title: "Terminolgy",
+                body: "A new version of Terminolgy is ready to install.",
             });
             updateNotification.on("click", () => {
                 fireAndForget(this.promptToInstallUpdate.bind(this));

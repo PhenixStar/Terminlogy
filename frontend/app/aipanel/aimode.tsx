@@ -120,7 +120,8 @@ function computeWaveCloudSections(
 
     if (waveProviderConfigs.length > 0) {
         sections.push({
-            sectionName: "Wave AI Cloud",
+            // REBRAND: "Wave AI Cloud" → "Terminolgy AI Cloud"
+            sectionName: "Terminolgy AI Cloud",
             configs: waveProviderConfigs,
             noTelemetry: !telemetryEnabled,
         });
@@ -274,7 +275,8 @@ export const AIModeDropdown = memo(({ compatibilityMode = false }: AIModeDropdow
                                                     onClick={handleEnableTelemetry}
                                                     className="text-center text-[11px] text-green-300 hover:text-green-200 pb-1 cursor-pointer transition-colors w-full"
                                                 >
-                                                    (enable telemetry to unlock Wave AI Cloud)
+                                                    {/* REBRAND: "Wave AI Cloud" → "Terminolgy AI Cloud" */}
+                                                    (enable telemetry to unlock Terminolgy AI Cloud)
                                                 </button>
                                             )}
                                         </>
