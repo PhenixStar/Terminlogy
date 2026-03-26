@@ -11,10 +11,11 @@ import { WaveDevVarName, WaveDevViteVarName } from "../frontend/util/isdev";
 import * as keyutil from "../frontend/util/keyutil";
 
 // This is a little trick to ensure that Electron puts all its runtime data into a subdirectory to avoid conflicts with our own data.
-// On macOS, it will store to ~/Library/Application \Support/waveterm/electron
-// On Linux, it will store to ~/.config/waveterm/electron
-// On Windows, it will store to %LOCALAPPDATA%/waveterm/electron
-app.setName("waveterm/electron");
+// On macOS, it will store to ~/Library/Application \Support/terminolgy/electron
+// On Linux, it will store to ~/.config/terminolgy/electron
+// On Windows, it will store to %LOCALAPPDATA%/terminolgy/electron
+// REBRAND: changed "waveterm/electron" → "terminolgy/electron" so Electron's runtime dir uses the new name
+app.setName("terminolgy/electron");
 
 const isDev = !app.isPackaged;
 const isDevVite = isDev && process.env.ELECTRON_RENDERER_URL;
@@ -26,7 +27,8 @@ if (isDevVite) {
     process.env[WaveDevViteVarName] = "1";
 }
 
-const waveDirNamePrefix = "waveterm";
+// REBRAND: changed dir-name prefix from "waveterm" to "terminolgy" — controls data/config folder names on all platforms
+const waveDirNamePrefix = "terminolgy";
 const waveDirNameSuffix = isDev ? "dev" : "";
 const waveDirName = `${waveDirNamePrefix}${waveDirNameSuffix ? `-${waveDirNameSuffix}` : ""}`;
 
@@ -37,9 +39,10 @@ const unamePlatform = process.platform;
 const unameArch: string = process.arch;
 keyutil.setKeyUtilPlatform(unamePlatform);
 
-const WaveConfigHomeVarName = "WAVETERM_CONFIG_HOME";
-const WaveDataHomeVarName = "WAVETERM_DATA_HOME";
-const WaveHomeVarName = "WAVETERM_HOME";
+// REBRAND: env-var names changed from WAVETERM_* to TERMINOLGY_* so users set the new vars for custom paths
+const WaveConfigHomeVarName = "TERMINOLGY_CONFIG_HOME";
+const WaveDataHomeVarName = "TERMINOLGY_DATA_HOME";
+const WaveHomeVarName = "TERMINOLGY_HOME";
 
 export function checkIfRunningUnderARM64Translation(fullConfig: FullConfigType) {
     if (!fullConfig.settings["app:dismissarchitecturewarning"] && app.runningUnderARM64Translation) {
@@ -47,17 +50,19 @@ export function checkIfRunningUnderARM64Translation(fullConfig: FullConfigType) 
         const dialogOpts: Electron.MessageBoxOptions = {
             type: "warning",
             buttons: ["Dismiss", "Learn More"],
-            title: "Wave has detected a performance issue",
-            message: `Wave is running in ARM64 translation mode which may impact performance.\n\nRecommendation: Download the native ARM64 version from our website for optimal performance.`,
+            // REBRAND: dialog title/body changed from "Wave" to "Terminolgy"
+            title: "Terminolgy has detected a performance issue",
+            message: `Terminolgy is running in ARM64 translation mode which may impact performance.\n\nRecommendation: Download the native ARM64 version from our website for optimal performance.`,
         };
 
         const choice = dialog.showMessageBoxSync(null, dialogOpts);
         if (choice === 1) {
             // Open the documentation URL
             console.log("User chose to learn more");
+            // REBRAND: upstream docs.waveterm.dev URL removed — no Terminolgy docsite equivalent yet
             fireAndForget(() =>
                 shell.openExternal(
-                    "https://docs.waveterm.dev/faq#why-does-wave-warn-me-about-arm64-translation-when-it-launches"
+                    "about:blank" // placeholder — replace with terminolgy docsite URL when available
                 )
             );
             throw new Error("User redirected to docsite to learn more about ARM64 translation, exiting");
@@ -165,7 +170,8 @@ function getElectronAppResourcesPath(): string {
     return process.resourcesPath;
 }
 
-const wavesrvBinName = `wavesrv.${unameArch}`;
+// REBRAND: binary renamed from "wavesrv.<arch>" to "terminolgy-srv.<arch>" — must match Taskfile.yml output names
+const wavesrvBinName = `terminolgy-srv.${unameArch}`;
 
 function getWaveSrvPath(): string {
     if (process.platform === "win32") {

@@ -19,10 +19,11 @@ const config = {
     nodeGypRebuild: false,
     electronCompile: false,
     files: [
+        // REBRAND: binary glob updated from "wavesrv.${arch}*" to "terminolgy-srv.${arch}*" and "wsh*" stays for now (wsh → tsh handled in Taskfile)
         {
             from: "./dist",
             to: "./dist",
-            filter: ["**/*", "!bin/*", "bin/wavesrv.${arch}*", "bin/wsh*", "!tsunamiscaffold/**/*"],
+            filter: ["**/*", "!bin/*", "bin/terminolgy-srv.${arch}*", "bin/tsh*", "!tsunamiscaffold/**/*"],
         },
         {
             from: ".",
@@ -41,7 +42,7 @@ const config = {
         output: "make",
     },
     asarUnpack: [
-        "dist/bin/**/*", // wavesrv and wsh binaries
+        "dist/bin/**/*", // terminolgy-srv and tsh binaries (REBRAND: was wavesrv and wsh)
         "dist/schema/**/*", // schema files for Monaco editor
     ],
     mac: {
@@ -58,21 +59,23 @@ const config = {
         category: "public.app-category.developer-tools",
         minimumSystemVersion: "10.15.0",
         mergeASARs: true,
-        singleArchFiles: "**/dist/bin/wavesrv.*",
+        // REBRAND: singleArchFiles pattern updated from "wavesrv.*" to "terminolgy-srv.*"
+        singleArchFiles: "**/dist/bin/terminolgy-srv.*",
         entitlements: "build/entitlements.mac.plist",
         entitlementsInherit: "build/entitlements.mac.plist",
         extendInfo: {
-            NSContactsUsageDescription: "A CLI application running in Wave wants to use your contacts.",
-            NSRemindersUsageDescription: "A CLI application running in Wave wants to use your reminders.",
+            // REBRAND: all NSUsageDescriptions updated from "Wave" to "Terminolgy"
+            NSContactsUsageDescription: "A CLI application running in Terminolgy wants to use your contacts.",
+            NSRemindersUsageDescription: "A CLI application running in Terminolgy wants to use your reminders.",
             NSLocationWhenInUseUsageDescription:
-                "A CLI application running in Wave wants to use your location information while active.",
+                "A CLI application running in Terminolgy wants to use your location information while active.",
             NSLocationAlwaysUsageDescription:
-                "A CLI application running in Wave wants to use your location information, even in the background.",
-            NSCameraUsageDescription: "A CLI application running in Wave wants to use the camera.",
-            NSMicrophoneUsageDescription: "A CLI application running in Wave wants to use your microphone.",
-            NSCalendarsUsageDescription: "A CLI application running in Wave wants to use Calendar data.",
-            NSLocationUsageDescription: "A CLI application running in Wave wants to use your location information.",
-            NSAppleEventsUsageDescription: "A CLI application running in Wave wants to use AppleScript.",
+                "A CLI application running in Terminolgy wants to use your location information, even in the background.",
+            NSCameraUsageDescription: "A CLI application running in Terminolgy wants to use the camera.",
+            NSMicrophoneUsageDescription: "A CLI application running in Terminolgy wants to use your microphone.",
+            NSCalendarsUsageDescription: "A CLI application running in Terminolgy wants to use Calendar data.",
+            NSLocationUsageDescription: "A CLI application running in Terminolgy wants to use your location information.",
+            NSAppleEventsUsageDescription: "A CLI application running in Terminolgy wants to use AppleScript.",
         },
     },
     linux: {
@@ -117,24 +120,26 @@ const config = {
         // this should remove /usr/lib/.build-id/ links which can conflict with other electron apps like slack
         fpm: ["--rpm-rpmbuild-define", "_build_id_links none"],
     },
-    publish: {
-        provider: "generic",
-        url: "https://dl.waveterm.dev/releases-w2",
-    },
+    // REBRAND: auto-updater publish URL commented out — no Terminolgy update server configured yet
+    // publish: {
+    //     provider: "generic",
+    //     url: "https://dl.waveterm.dev/releases-w2",
+    // },
     afterPack: (context) => {
-        // This is a workaround to restore file permissions to the wavesrv binaries on macOS after packaging the universal binary.
+        // This is a workaround to restore file permissions to the terminolgy-srv binaries on macOS after packaging the universal binary. (REBRAND: was wavesrv)
         if (context.electronPlatformName === "darwin" && context.arch === Arch.universal) {
             const packageBinDir = path.resolve(
                 context.appOutDir,
                 `${pkg.productName}.app/Contents/Resources/app.asar.unpacked/dist/bin`
             );
 
-            // Reapply file permissions to the wavesrv binaries in the final app package
+            // REBRAND: binary name filter changed from "wavesrv" to "terminolgy-srv"
+            // Reapply file permissions to the terminolgy-srv binaries in the final app package
             fs.readdirSync(packageBinDir, {
                 recursive: true,
                 withFileTypes: true,
             })
-                .filter((f) => f.isFile() && f.name.startsWith("wavesrv"))
+                .filter((f) => f.isFile() && f.name.startsWith("terminolgy-srv"))
                 .forEach((f) => fs.chmodSync(path.resolve(f.parentPath ?? f.path, f.name), 0o755)); // 0o755 corresponds to -rwxr-xr-x
         }
     },
