@@ -15,6 +15,7 @@ export type BlockEnv = WaveEnvSubset<{
         | "app:showoverlayblocknums"
         | "window:magnifiedblockblurprimarypx"
         | "window:magnifiedblockopacity"
+        | "block:compactheaders"
     >;
     showContextMenu: WaveEnv["showContextMenu"];
     atoms: {
@@ -31,6 +32,8 @@ export type BlockEnv = WaveEnvSubset<{
         ConnConnectCommand: WaveEnv["rpc"]["ConnConnectCommand"];
         SetConnectionsConfigCommand: WaveEnv["rpc"]["SetConnectionsConfigCommand"];
         DismissWshFailCommand: WaveEnv["rpc"]["DismissWshFailCommand"];
+        SetMetaCommand: WaveEnv["rpc"]["SetMetaCommand"];
+        SetConfigCommand: WaveEnv["rpc"]["SetConfigCommand"];
     };
     wos: WaveEnv["wos"];
     getConnStatusAtom: WaveEnv["getConnStatusAtom"];
@@ -45,5 +48,6 @@ export type BlockEnv = WaveEnvSubset<{
         | "icon:color"
         | "frame:title"
         | "frame:icon"
+        | "frame:pinheader"
     >;
 }>;

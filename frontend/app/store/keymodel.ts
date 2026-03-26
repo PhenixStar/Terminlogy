@@ -21,6 +21,7 @@ import {
     WOS,
 } from "@/app/store/global";
 import { getActiveTabModel } from "@/app/store/tab-model";
+import { TabRpcClient } from "@/app/store/wshrpcutil";
 import { WorkspaceLayoutModel } from "@/app/workspace/workspace-layout-model";
 import { deleteLayoutModelForTab, getLayoutModelForStaticTab, NavigateDirection } from "@/layout/index";
 import * as keyutil from "@/util/keyutil";
@@ -726,6 +727,16 @@ function registerGlobalKeys() {
         return false;
     }
     globalKeyMap.set("Cmd:f", activateSearch);
+    globalKeyMap.set("Ctrl:Shift:p", () => {
+        modalsModel.pushModal("CommandPaletteModal");
+        return true;
+    });
+    if (!isWindows()) {
+        globalKeyMap.set("Cmd:Shift:p", () => {
+            modalsModel.pushModal("CommandPaletteModal");
+            return true;
+        });
+    }
     globalKeyMap.set("Escape", () => {
         if (modalsModel.hasOpenModals()) {
             modalsModel.popModal();
@@ -739,6 +750,11 @@ function registerGlobalKeys() {
     globalKeyMap.set("Cmd:Shift:a", () => {
         const currentVisible = WorkspaceLayoutModel.getInstance().getAIPanelVisible();
         WorkspaceLayoutModel.getInstance().setAIPanelVisible(!currentVisible);
+        return true;
+    });
+    globalKeyMap.set("Ctrl:Shift:b", () => {
+        const current = globalStore.get(getSettingsKeyAtom("block:compactheaders")) ?? false;
+        fireAndForget(() => TabRpcClient.wshRpcCall("setconfig", { "block:compactheaders": !current }, null));
         return true;
     });
     const allKeys = Array.from(globalKeyMap.keys());

@@ -110,6 +110,7 @@ type SettingsType struct {
 	TermBellIndicator       *bool    `json:"term:bellindicator,omitempty"`
 	TermOsc52               string   `json:"term:osc52,omitempty" jsonschema:"enum=focus,enum=always"`
 	TermDurable             *bool    `json:"term:durable,omitempty"`
+	TermAiErrorAnalysis     *bool    `json:"term:aierroranalysis,omitempty"`
 	TermCloseOnLastTermClose bool    `json:"term:closeonlasttermclose,omitempty"`
 
 	EditorMinimapEnabled      bool    `json:"editor:minimapenabled,omitempty"`
@@ -171,6 +172,9 @@ type SettingsType struct {
 
 	TelemetryClear   bool `json:"telemetry:*,omitempty"`
 	TelemetryEnabled bool `json:"telemetry:enabled,omitempty"`
+
+	BlockClear          bool  `json:"block:*,omitempty"`
+	BlockCompactHeaders *bool `json:"block:compactheaders,omitempty"`
 
 	ConnClear                bool    `json:"conn:*,omitempty"`
 	ConnAskBeforeWshInstall  *bool   `json:"conn:askbeforewshinstall,omitempty"`
