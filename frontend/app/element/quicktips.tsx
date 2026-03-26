@@ -157,7 +157,7 @@ const QuickTips = () => {
                             <KeyBinding keyDecl="Cmd:n" />
                         </div>
                         <div className="flex flex-col gap-0.5 p-2 rounded-md hover:bg-white/5 transition-colors">
-                            {/* REBRAND: "Open Wave AI Panel" → "Open Terminolgy AI Panel" */}
+                            {/* REBRAND: "Open Terminolgy AI Panel" → "Open Terminolgy AI Panel" */}
                             <span className="text-[15px]">Open Terminolgy AI Panel</span>
                             <KeyBinding keyDecl="Cmd:Shift:a" />
                         </div>
@@ -194,7 +194,7 @@ const QuickTips = () => {
                             <KeyBinding keyDecl="Ctrl:Shift:Digit" />
                         </div>
                         <div className="flex flex-col gap-0.5 p-2 rounded-md hover:bg-white/5 transition-colors">
-                            {/* REBRAND: "Focus Wave AI" → "Focus Terminolgy AI" */}
+                            {/* REBRAND: "Focus Terminolgy AI" → "Focus Terminolgy AI" */}
                             <span className="text-[15px]">Focus Terminolgy AI</span>
                             <KeyBinding keyDecl="Ctrl:Shift:0" />
                         </div>
@@ -303,7 +303,7 @@ const QuickTips = () => {
                         </IconBox>
                         <a
                             target="_blank"
-                            href="https://docs.waveterm.dev/config"
+                            href="https://docs.terminolgy.io/config"
                             rel="noopener"
                             className="hover:text-accent-400 hover:underline transition-colors font-medium"
                         >
@@ -316,7 +316,7 @@ const QuickTips = () => {
                         </IconBox>
                         <a
                             target="_blank"
-                            href="https://docs.waveterm.dev/keybindings"
+                            href="https://docs.terminolgy.io/keybindings"
                             rel="noopener"
                             className="hover:text-accent-400 hover:underline transition-colors font-medium"
                         >
@@ -329,7 +329,7 @@ const QuickTips = () => {
                         </IconBox>
                         <a
                             target="_blank"
-                            href="https://docs.waveterm.dev"
+                            href="https://docs.terminolgy.io"
                             rel="noopener"
                             className="hover:text-accent-400 hover:underline transition-colors font-medium"
                         >

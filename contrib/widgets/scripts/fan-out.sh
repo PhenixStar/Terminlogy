@@ -1,7 +1,7 @@
 #!/bin/bash
 # fan-out.sh — Run command across multiple SSH hosts in parallel
 # Usage: fan-out.sh "command" [host1 host2 ...]
-# If no hosts, reads from ~/.config/waveterm/connections.json
+# If no hosts, reads from ~/.config/terminolgy/connections.json
 
 CMD="${1:?Usage: fan-out.sh \"command\" [host1 host2 ...]}"
 shift

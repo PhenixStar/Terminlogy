@@ -205,7 +205,7 @@ const FakeAIPanelHeader = memo(() => {
         <div className="py-2 pl-3 pr-1 border-b border-gray-600 flex items-center justify-between min-w-0 bg-zinc-900">
             <h2 className="text-white text-sm font-semibold flex items-center gap-2 flex-shrink-0 whitespace-nowrap">
                 <i className="fa fa-sparkles text-accent"></i>
-                {/* REBRAND: "Wave AI" → "Terminolgy AI" */}
+                {/* REBRAND: "Terminolgy AI" → "Terminolgy AI" */}
                 Terminolgy AI
             </h2>
 

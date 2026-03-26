@@ -43,7 +43,7 @@ export const WaveAIPage = ({ onNext, onSkip }: { onNext: () => void; onSkip: () 
                 <div>
                     <Logo />
                 </div>
-                {/* REBRAND: "Wave AI" → "Terminolgy AI" */}
+                {/* REBRAND: "Terminolgy AI" → "Terminolgy AI" */}
                 <div className="text-[25px] font-normal text-foreground">Terminolgy AI</div>
             </header>
             <div className="flex-1 flex flex-row gap-0 min-h-0">
@@ -56,7 +56,7 @@ export const WaveAIPage = ({ onNext, onSkip }: { onNext: () => void; onSkip: () 
 
                         <div className="flex flex-col items-start gap-4 text-secondary">
                             <p>
-                                {/* REBRAND: "Wave AI" → "Terminolgy AI" */}
+                                {/* REBRAND: "Terminolgy AI" → "Terminolgy AI" */}
                                 Terminolgy AI is your terminal assistant with context. I can read your terminal output,
                                 analyze widgets, read/write files, and help you solve problems faster.
                             </p>
@@ -64,7 +64,7 @@ export const WaveAIPage = ({ onNext, onSkip }: { onNext: () => void; onSkip: () 
                             <div className="flex items-start gap-3 w-full">
                                 <i className="fa fa-sparkles text-accent text-lg mt-1 flex-shrink-0" />
                                 <p>
-                                    {/* REBRAND: "Wave AI" → "Terminolgy AI" */}
+                                    {/* REBRAND: "Terminolgy AI" → "Terminolgy AI" */}
                                     Toggle the Terminolgy AI panel with the{" "}
                                     <span className="inline-flex h-[26px] px-1.5 items-center rounded-md box-border bg-hover text-accent text-[12px] align-middle">
                                         <i className="fa fa-sparkles" />

@@ -42,7 +42,7 @@ const BYOKAnnouncement = () => {
                 <div className="text-left flex-1">
                     <div className="text-blue-400 font-medium mb-1">New: BYOK & Local AI Support</div>
                     <div className="text-secondary text-sm mb-3">
-                        {/* REBRAND: "Wave AI now supports" → "Terminolgy AI now supports" */}
+                        {/* REBRAND: "Terminolgy AI now supports" → "Terminolgy AI now supports" */}
                         Terminolgy AI now supports bring-your-own-key (BYOK) with OpenAI, Google Gemini, Azure, and
                         OpenRouter, plus local models via Ollama, LM Studio, and other OpenAI-compatible providers.
                     </div>
@@ -54,7 +54,7 @@ const BYOKAnnouncement = () => {
                             Configure AI Modes
                         </button>
                         <a
-                            href="https://docs.waveterm.dev/waveai-modes"
+                            href="https://docs.terminolgy.io/waveai-modes"
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={handleViewDocs}

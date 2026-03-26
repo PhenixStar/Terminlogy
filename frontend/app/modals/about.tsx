@@ -50,7 +50,7 @@ const AboutModalV = ({ versionString, updaterChannel, onClose }: AboutModalVProp
                         <i className="fa-brands fa-github mr-2"></i>GitHub
                     </a>
                     <a
-                        href="https://www.waveterm.dev/?ref=about"
+                        href="https://terminolgy.io/?ref=about"
                         target="_blank"
                         rel="noopener"
                         className="inline-flex items-center justify-center px-4 py-2 rounded border border-border hover:bg-hoverbg transition-colors duration-200"

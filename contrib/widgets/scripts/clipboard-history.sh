@@ -8,7 +8,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-STATE_DIR="${WIDGET_STATE_DIR:-$HOME/.waveterm/widget-state}"
+STATE_DIR="${WIDGET_STATE_DIR:-$HOME/.terminolgy/widget-state}"
 HISTORY_FILE="$STATE_DIR/clipboard-history.txt"
 MAX_ENTRIES=50
 POLL_INTERVAL=2

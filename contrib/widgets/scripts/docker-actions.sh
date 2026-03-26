@@ -19,7 +19,7 @@ fi
 SSH_HOST="phenix@dgx"
 SSH_PORT="2442"
 SSH_KEY="$HOME/.ssh/id_ed25519"
-STATE_DIR="${WIDGET_STATE_DIR:-$HOME/.waveterm/widget-state}"
+STATE_DIR="${WIDGET_STATE_DIR:-$HOME/.terminolgy/widget-state}"
 LAST_SELECTED_FILE="$STATE_DIR/docker-actions-last-selected.txt"
 
 # Colors

@@ -36,7 +36,7 @@ DIM='\033[2m'
 NC='\033[0m'
 
 # State files
-STATE_DIR="${WIDGET_STATE_DIR:-$HOME/.waveterm/widget-state}"
+STATE_DIR="${WIDGET_STATE_DIR:-$HOME/.terminolgy/widget-state}"
 ALERT_HISTORY_FILE="$STATE_DIR/alert-history.txt"
 LAST_CONTAINER_COUNT_FILE="$STATE_DIR/last-container-count.txt"
 LAST_TUNNEL_COUNT_FILE="$STATE_DIR/last-tunnel-count.txt"
@@ -49,7 +49,7 @@ usage() {
     cat <<EOF
 Usage: $(basename "$0") [OPTIONS]
 
-Monitor system metrics and send alerts to WaveTerm tab bar.
+Monitor system metrics and send alerts to Terminolgy tab bar.
 
 OPTIONS:
     --gpu-temp N           GPU temperature threshold (default: 80)
@@ -73,7 +73,7 @@ log_msg() {
 send_tab_alert() {
     local severity="$1"
     local message="$2"
-    # OSC 777 escape sequence to notify WaveTerm tab bar
+    # OSC 777 escape sequence to notify Terminolgy tab bar
     printf '\033]777;alert;%s;%s\007' "$severity" "$message"
 }
 
@@ -197,7 +197,7 @@ save_alert_history() {
 render_screen() {
     clear -x
     echo -e "${BOLD}${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${BOLD}${CYAN}║              WaveTerm Alert Monitor                          ║${NC}"
+    echo -e "${BOLD}${CYAN}║              Terminolgy Alert Monitor                        ║${NC}"
     echo -e "${BOLD}${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
     echo
 

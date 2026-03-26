@@ -23,7 +23,7 @@ const UpgradeOnboardingModal_v0_14_0_Content = () => {
                     <div className="text-foreground text-base font-semibold leading-[18px]">
                         Durable SSH Sessions{" "}
                         <button
-                            onClick={() => waveEnv.electron.openExternal("https://docs.waveterm.dev/durable-sessions")}
+                            onClick={() => waveEnv.electron.openExternal("https://docs.terminolgy.io/durable-sessions")}
                             className="text-accent text-sm font-normal cursor-pointer hover:underline"
                         >
                             [see docs]
@@ -72,7 +72,7 @@ const UpgradeOnboardingModal_v0_14_0_Content = () => {
                     <i className="text-[24px] text-accent fa-solid fa-sparkles"></i>
                 </div>
                 <div className="flex flex-col items-start gap-2 flex-1">
-                    <div className="text-foreground text-base font-semibold leading-[18px]">Wave AI Updates</div>
+                    <div className="text-foreground text-base font-semibold leading-[18px]">Terminolgy AI Updates</div>
                     <div className="text-secondary leading-5">
                         <ul className="list-disc list-outside space-y-1 pl-5">
                             <li>

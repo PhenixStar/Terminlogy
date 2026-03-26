@@ -14,7 +14,7 @@ import (
 	"github.com/wavetermdev/waveterm/pkg/waveobj"
 )
 
-const OldDBName = "~/.waveterm/waveterm.db"
+const OldDBName = "~/.terminolgy/terminolgy.db"
 
 func GetOldDBName() string {
 	return wavebase.ExpandHomeDirSafe(OldDBName)

@@ -1,4 +1,4 @@
-# Wave Terminal — Copilot Instructions
+# Terminolgy — Copilot Instructions
 
 ## Project Rules
 

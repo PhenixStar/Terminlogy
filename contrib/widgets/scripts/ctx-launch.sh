@@ -25,8 +25,8 @@ case "$SPLIT" in
 esac
 
 # Get current connection from WaveTerm environment
-CONN="${WAVETERM_CONN:-}"
-BLOCK_ID="${WAVETERM_BLOCKID:-}"
+CONN="${TERMINOLGY_CONN:-}"
+BLOCK_ID="${TERMINOLGY_BLOCKID:-}"
 
 # Get current working directory
 CWD="$(pwd)"

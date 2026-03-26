@@ -1,7 +1,7 @@
 #!/bin/bash
 # fan-out-blocks.sh — Open a command across multiple SSH hosts as Wave Terminal blocks
 # Usage: fan-out-blocks.sh "command" [host1 host2 ...]
-# If no hosts, reads from ~/.config/waveterm/connections.json
+# If no hosts, reads from ~/.config/terminolgy/connections.json
 # Each host opens as a separate terminal block in the current tab
 
 CMD="${1:?Usage: fan-out-blocks.sh \"command\" [host1 host2 ...]}"

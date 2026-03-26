@@ -81,15 +81,15 @@ _terminolgy_si_osc7() {
 }
 
 _terminolgy_si_precmd() {
-    local _waveterm_si_status=$?
+    local _terminolgy_si_status=$?
     _terminolgy_si_blocked && return
-    
+
     if [ "$_TERMINOLGY_SI_FIRSTPROMPT" -eq 1 ]; then
         local uname_info
         uname_info=$(uname -smr 2>/dev/null)
         printf '\033]16162;M;{"shell":"bash","shellversion":"%s","uname":"%s","integration":true}\007' "$BASH_VERSION" "$uname_info"
     else
-        printf '\033]16162;D;{"exitcode":%d}\007' "$_waveterm_si_status"
+        printf '\033]16162;D;{"exitcode":%d}\007' "$_terminolgy_si_status"
     fi
     # OSC 7 sent on every prompt - bash has no chpwd hook for directory changes
     _terminolgy_si_osc7

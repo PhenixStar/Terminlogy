@@ -81,11 +81,11 @@ _terminolgy_si_osc7() {
 }
 
 _terminolgy_si_precmd() {
-  local _waveterm_si_status=$?
+  local _terminolgy_si_status=$?
   _terminolgy_si_blocked && return
   # D;status for previous command (skip before first prompt)
   if (( !_TERMINOLGY_SI_FIRSTPRECMD )); then
-    printf '\033]16162;D;{"exitcode":%d}\007' "$_waveterm_si_status"
+    printf '\033]16162;D;{"exitcode":%d}\007' "$_terminolgy_si_status"
   else
     local uname_info=$(uname -smr 2>/dev/null)
     local omz=false

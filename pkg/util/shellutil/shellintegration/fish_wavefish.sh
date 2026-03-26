@@ -25,7 +25,7 @@ function _terminolgy_si_osc7
 end
 
 function _terminolgy_si_prompt --on-event fish_prompt
-    set -l _waveterm_si_status $status
+    set -l _terminolgy_si_status $status
     _terminolgy_si_blocked; and return
     if test $_TERMINOLGY_SI_FIRSTPROMPT -eq 1
         set -l uname_info (uname -smr 2>/dev/null)
@@ -33,7 +33,7 @@ function _terminolgy_si_prompt --on-event fish_prompt
         # OSC 7 only sent on first prompt - chpwd hook handles directory changes
         _terminolgy_si_osc7
     else
-        printf '\033]16162;D;{"exitcode":%d}\007' $_waveterm_si_status
+        printf '\033]16162;D;{"exitcode":%d}\007' $_terminolgy_si_status
     end
     printf '\033]16162;A\007'
     set -g _TERMINOLGY_SI_FIRSTPROMPT 0

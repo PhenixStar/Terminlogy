@@ -161,7 +161,7 @@ const InitPage = ({
                                 <a
                                     className="text-secondary! hover:underline!"
                                     target="_blank"
-                                    href="https://waveterm.dev/privacy"
+                                    href="https://terminolgy.io/privacy"
                                     rel="noopener"
                                 >
                                     Privacy Policy

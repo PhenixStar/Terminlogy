@@ -7,7 +7,7 @@
     30 seconds, and renders a color-coded status table in the terminal.
 #>
 
-$ConnectionsFile = "$env:USERPROFILE\.config\waveterm\connections.json"
+$ConnectionsFile = "$env:USERPROFILE\.config\terminolgy\connections.json"
 $PollInterval    = 30   # seconds
 $SSHTimeout      = 5    # seconds
 

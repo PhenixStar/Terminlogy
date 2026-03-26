@@ -35,7 +35,7 @@ export const AIPanelInput = memo(({ onSubmit, status, model }: AIPanelInputProps
     } else if (model.inBuilder) {
         placeholder = "What would you like to build...";
     } else {
-        // REBRAND: "Ask Wave AI anything..." → "Ask Terminolgy AI anything..."
+        // REBRAND: "Ask Terminolgy AI anything..." → "Ask Terminolgy AI anything..."
         placeholder = "Ask Terminolgy AI anything...";
     }
 

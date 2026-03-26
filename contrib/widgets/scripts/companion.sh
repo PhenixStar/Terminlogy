@@ -17,7 +17,7 @@ MAGENTA="${ESC}[35m"
 RED="${ESC}[31m"
 RESET="${ESC}[0m"
 
-CONN="${WAVETERM_CONN:-local}"
+CONN="${TERMINOLGY_CONN:-local}"
 CWD="$(pwd)"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
