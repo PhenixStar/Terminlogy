@@ -35,7 +35,8 @@ export const AIPanelInput = memo(({ onSubmit, status, model }: AIPanelInputProps
     } else if (model.inBuilder) {
         placeholder = "What would you like to build...";
     } else {
-        placeholder = "Ask Wave AI anything...";
+        // REBRAND: "Ask Wave AI anything..." → "Ask Terminolgy AI anything..."
+        placeholder = "Ask Terminolgy AI anything...";
     }
 
     const resizeTextarea = useCallback(() => {

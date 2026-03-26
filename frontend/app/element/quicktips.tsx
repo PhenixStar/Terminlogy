@@ -157,7 +157,8 @@ const QuickTips = () => {
                             <KeyBinding keyDecl="Cmd:n" />
                         </div>
                         <div className="flex flex-col gap-0.5 p-2 rounded-md hover:bg-white/5 transition-colors">
-                            <span className="text-[15px]">Open Wave AI Panel</span>
+                            {/* REBRAND: "Open Wave AI Panel" → "Open Terminolgy AI Panel" */}
+                            <span className="text-[15px]">Open Terminolgy AI Panel</span>
                             <KeyBinding keyDecl="Cmd:Shift:a" />
                         </div>
                     </div>
@@ -193,7 +194,8 @@ const QuickTips = () => {
                             <KeyBinding keyDecl="Ctrl:Shift:Digit" />
                         </div>
                         <div className="flex flex-col gap-0.5 p-2 rounded-md hover:bg-white/5 transition-colors">
-                            <span className="text-[15px]">Focus Wave AI</span>
+                            {/* REBRAND: "Focus Wave AI" → "Focus Terminolgy AI" */}
+                            <span className="text-[15px]">Focus Terminolgy AI</span>
                             <KeyBinding keyDecl="Ctrl:Shift:0" />
                         </div>
                     </div>

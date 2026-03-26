@@ -148,7 +148,8 @@ export async function handleWaveAIContextMenu(e: React.MouseEvent, showCopy: boo
         menu.push({ type: "separator" });
 
         menu.push({
-            label: "Hide Wave AI",
+            // REBRAND: "Hide Wave AI" → "Hide Terminolgy AI"
+        label: "Hide Terminolgy AI",
             click: () => {
                 model.closeWaveAIPanel();
             },

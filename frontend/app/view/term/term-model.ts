@@ -120,7 +120,8 @@ export class TermViewModel implements ViewModel {
             const blockData = get(this.blockAtom);
             const termMode = get(this.termMode);
             if (termMode == "vdom") {
-                return "Wave App";
+                // REBRAND: "Wave App" → "Terminolgy App"
+                return "Terminolgy App";
             }
             if (blockData?.meta?.controller == "cmd") {
                 return "";
@@ -147,7 +148,8 @@ export class TermViewModel implements ViewModel {
                 rtn.push({
                     elemtype: "iconbutton",
                     icon: "bolt",
-                    title: "Switch to Wave App",
+                    // REBRAND: "Switch to Wave App" → "Switch to Terminolgy App"
+                    title: "Switch to Terminolgy App",
                     click: () => {
                         this.setTermMode("vdom");
                     },

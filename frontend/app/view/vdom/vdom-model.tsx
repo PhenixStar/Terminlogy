@@ -148,7 +148,8 @@ export class VDomModel {
         this.contextActive = jotai.atom(false);
         this.reset();
         this.viewIcon = jotai.atom("bolt");
-        this.viewName = jotai.atom("Wave App");
+        // REBRAND: "Wave App" → "Terminolgy App"
+        this.viewName = jotai.atom("Terminolgy App");
         this.backendRoute = jotai.atom((get) => {
             const blockData = get(WOS.getWaveObjectAtom<Block>(makeORef("block", this.blockId)));
             return blockData?.meta?.["vdom:route"];
