@@ -117,6 +117,7 @@ function handleShellIntegrationCommandStart(
         globalStore.set(termWrap.lastCommandAtom, null);
     }
     rtInfo["shell:lastcmdexitcode"] = null;
+    globalStore.set(termWrap.lastCmdExitCodeAtom, null);
 }
 
 function handleShellIntegrationInputReadback(
@@ -352,8 +353,10 @@ export function handleOsc16162Command(data: string, blockId: string, loaded: boo
         case "D":
             if (cmd.data.exitcode != null) {
                 rtInfo["shell:lastcmdexitcode"] = cmd.data.exitcode;
+                globalStore.set(termWrap.lastCmdExitCodeAtom, cmd.data.exitcode);
             } else {
                 rtInfo["shell:lastcmdexitcode"] = null;
+                globalStore.set(termWrap.lastCmdExitCodeAtom, null);
             }
             break;
         case "I":

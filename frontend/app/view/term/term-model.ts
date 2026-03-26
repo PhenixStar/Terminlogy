@@ -84,6 +84,7 @@ export class TermViewModel implements ViewModel {
     termDurableStatus: jotai.Atom<BlockJobStatusData | null>;
     termConfigedDurable: jotai.Atom<null | boolean>;
     searchAtoms?: SearchAtoms;
+    aiFixRequestedAtom: jotai.PrimitiveAtom<boolean>;
 
     constructor({ blockId, nodeModel, tabModel }: ViewModelInitType) {
         this.viewType = "term";
@@ -107,6 +108,7 @@ export class TermViewModel implements ViewModel {
             return blockData?.meta?.["term:mode"] ?? "term";
         });
         this.isRestarting = jotai.atom(false);
+        this.aiFixRequestedAtom = jotai.atom(false);
         this.viewIcon = jotai.atom((get) => {
             const termMode = get(this.termMode);
             if (termMode == "vdom") {
@@ -756,6 +758,11 @@ export class TermViewModel implements ViewModel {
             event.preventDefault();
             event.stopPropagation();
             this.termRef.current?.terminal?.clear();
+            return false;
+        } else if (keyutil.checkKeyPressed(waveEvent, "Ctrl:Shift:f")) {
+            event.preventDefault();
+            event.stopPropagation();
+            globalStore.set(this.aiFixRequestedAtom, true);
             return false;
         }
         const shellProcStatus = globalStore.get(this.shellProcStatus);

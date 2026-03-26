@@ -95,6 +95,7 @@ export class TermWrap {
     promptMarkers: TermTypes.IMarker[] = [];
     shellIntegrationStatusAtom: jotai.PrimitiveAtom<ShellIntegrationStatus | null>;
     lastCommandAtom: jotai.PrimitiveAtom<string | null>;
+    lastCmdExitCodeAtom: jotai.PrimitiveAtom<number | null>;
     shellInputBufferAtom: jotai.PrimitiveAtom<string | null>;
     shellInputCursorAtom: jotai.PrimitiveAtom<number | null>;
     nodeModel: BlockNodeModel; // this can be null
@@ -136,6 +137,7 @@ export class TermWrap {
         this.promptMarkers = [];
         this.shellIntegrationStatusAtom = jotai.atom(null) as jotai.PrimitiveAtom<ShellIntegrationStatus | null>;
         this.lastCommandAtom = jotai.atom(null) as jotai.PrimitiveAtom<string | null>;
+        this.lastCmdExitCodeAtom = jotai.atom(null) as jotai.PrimitiveAtom<number | null>;
         this.shellInputBufferAtom = jotai.atom(null) as jotai.PrimitiveAtom<string | null>;
         this.shellInputCursorAtom = jotai.atom(null) as jotai.PrimitiveAtom<number | null>;
         this.webglEnabledAtom = jotai.atom(false) as jotai.PrimitiveAtom<boolean>;
