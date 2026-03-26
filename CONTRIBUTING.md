@@ -1,6 +1,6 @@
-# Contributing to Wave Terminal
+# Contributing to Terminolgy
 
-Wave Terminal is an opinionated project with a single active maintainer. Contributions are welcome, but **alignment matters more than volume**.
+Terminolgy is an opinionated project with a single active maintainer. Contributions are welcome, but **alignment matters more than volume**.
 
 This document helps you decide _whether_ and _how_ to contribute in a way that's likely to be accepted, saving both of us time.
 
@@ -61,7 +61,7 @@ This is not meant to discourage contribution — it is meant to ensure alignment
 
 To set expectations clearly:
 
-- Wave is not designed as a "first open source contribution" project
+- Terminolgy is not designed as a "first open source contribution" project
 - We do not currently curate beginner-friendly or mentorship issues
 - Large, unsolicited changes are unlikely to be accepted
 - Mechanical refactors, broad style changes, or drive-by rewrites are not helpful
@@ -100,7 +100,7 @@ The project uses American English. Please follow existing formatting and style c
 
 ## Development setup
 
-To build and run Wave locally, see instructions at [Building Wave Terminal](./BUILD.md).
+To build and run Terminolgy locally, see instructions at [Building Terminolgy](./BUILD.md).
 
 ## Code of Conduct
 
@@ -108,4 +108,4 @@ All contributors are expected to follow the project's [Code of Conduct](./CODE_O
 
 ---
 
-Thank you for your interest in Wave Terminal. Clear expectations help keep the project moving quickly and sustainably.
+Thank you for your interest in Terminolgy. Clear expectations help keep the project moving quickly and sustainably.

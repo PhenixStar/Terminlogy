@@ -1,6 +1,6 @@
-# Wave Terminal Roadmap
+# Terminolgy Roadmap
 
-This roadmap outlines major upcoming features and improvements for Wave Terminal. As with any roadmap, priorities and timelines may shift as development progresses.
+This roadmap outlines major upcoming features and improvements for Terminolgy. As with any roadmap, priorities and timelines may shift as development progresses.
 
 Want input on the roadmap? Join the discussion on [Discord](https://discord.gg/XfvZ334gwU).
 
@@ -8,7 +8,7 @@ Legend: ✅ Done | 🔧 In Progress | 🔷 Planned | 🤞 Stretch Goal
 
 ## Current AI Capabilities
 
-Wave Terminal's AI assistant is already powerful and continues to evolve. Here's what works today:
+Terminolgy's AI assistant is already powerful and continues to evolve. Here's what works today:
 
 ### AI Provider Support
 

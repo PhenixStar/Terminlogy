@@ -1,12 +1,12 @@
-# Building Wave Terminal
+# Building Terminolgy
 
-These instructions are for setting up dependencies and building Wave Terminal from source on macOS, Linux, and Windows.
+These instructions are for setting up dependencies and building Terminolgy from source on macOS, Linux, and Windows.
 
 ## Prerequisites
 
 ### OS-specific dependencies
 
-See [Minimum requirements](README.md#minimum-requirements) to learn whether your OS is supported.
+See [README.md](README.md) to learn whether your OS is supported.
 
 #### macOS
 
@@ -76,13 +76,13 @@ We now use `npm`, so you can just run an `npm install` to install node dependenc
 ## Clone the Repo
 
 ```sh
-git clone git@github.com:wavetermdev/waveterm.git
+git clone git@github.com:PhenixStar/terminolgy.git
 ```
 
 or
 
 ```sh
-git clone https://github.com/wavetermdev/waveterm.git
+git clone https://github.com/PhenixStar/terminolgy.git
 ```
 
 ## Install code dependencies
@@ -135,4 +135,4 @@ You can use the regular Chrome DevTools to debug the frontend application. You c
 
 ### Backend logs
 
-Backend logs for the development version of Wave can be found at `~/.waveterm-dev/waveapp.log`. Both the NodeJS backend from Electron and the main Go backend will log here.
+Backend logs for the development version of Terminolgy can be found at `~/.terminolgy-dev/waveapp.log`. Both the NodeJS backend from Electron and the main Go backend will log here.
