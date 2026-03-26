@@ -160,9 +160,10 @@ func aiRun(cmd *cobra.Command, args []string) (rtnErr error) {
 		})
 	}
 
-	tabId := os.Getenv("WAVETERM_TABID")
+	// REBRAND: WAVETERM_TABID → TERMINOLGY_TABID (tab ID env var read by wsh ai command)
+	tabId := os.Getenv("TERMINOLGY_TABID") // was "WAVETERM_TABID"
 	if tabId == "" {
-		return fmt.Errorf("WAVETERM_TABID environment variable not set")
+		return fmt.Errorf("TERMINOLGY_TABID environment variable not set") // was WAVETERM_TABID
 	}
 
 	route := wshutil.MakeTabRouteId(tabId)

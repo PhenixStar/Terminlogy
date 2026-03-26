@@ -23,11 +23,13 @@ import (
 	"github.com/wavetermdev/waveterm/pkg/wavebase"
 )
 
-const WCloudEndpoint = "https://api.waveterm.dev/central"
+// REBRAND: upstream cloud endpoints disabled for Terminolgy fork — waveterm.dev endpoints will not receive data
+// To re-enable, restore original URL values or override via WCLOUD_ENDPOINT / WCLOUD_PING_ENDPOINT env vars in dev mode.
+const WCloudEndpoint = ""    // was "https://api.waveterm.dev/central" — disabled for Terminolgy
 const WCloudEndpointVarName = "WCLOUD_ENDPOINT"
-const WCloudWSEndpoint = "wss://wsapi.waveterm.dev/"
+const WCloudWSEndpoint = ""  // was "wss://wsapi.waveterm.dev/" — disabled for Terminolgy
 const WCloudWSEndpointVarName = "WCLOUD_WS_ENDPOINT"
-const WCloudPingEndpoint = "https://ping.waveterm.dev/central"
+const WCloudPingEndpoint = "" // was "https://ping.waveterm.dev/central" — disabled for Terminolgy
 const WCloudPingEndpointVarName = "WCLOUD_PING_ENDPOINT"
 
 var WCloudWSEndpoint_VarCache string

@@ -151,7 +151,8 @@ func (impl *ServerImpl) RemoteStartJobCommand(ctx context.Context, data wshrpc.C
 
 	cmd := exec.Command(wshPath, "jobmanager", "--jobid", data.JobId, "--clientid", data.ClientId)
 	if data.PublicKeyBase64 != "" {
-		cmd.Env = append(os.Environ(), "WAVETERM_PUBLICKEY="+data.PublicKeyBase64)
+		// REBRAND: WAVETERM_PUBLICKEY → TERMINOLGY_PUBLICKEY (env var that carries JWT public key to jobmanager subprocess)
+		cmd.Env = append(os.Environ(), "TERMINOLGY_PUBLICKEY="+data.PublicKeyBase64) // was "WAVETERM_PUBLICKEY"
 	}
 	cmd.ExtraFiles = []*os.File{readyPipeWrite}
 	stdin, err := cmd.StdinPipe()

@@ -15,7 +15,8 @@ import (
 )
 
 const (
-	IssuerWaveTerm = "waveterm"
+	// REBRAND: "waveterm" → "terminolgy" (JWT issuer claim value)
+	IssuerWaveTerm = "terminolgy" // was "waveterm"
 )
 
 var (

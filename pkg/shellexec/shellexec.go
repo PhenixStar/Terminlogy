@@ -225,18 +225,21 @@ func StartWslShellProc(ctx context.Context, termSize waveobj.TermSize, cmdStr st
 		if shellType == shellutil.ShellType_bash {
 			// add --rcfile
 			// cant set -l or -i with --rcfile
-			bashPath := fmt.Sprintf("~/.waveterm/%s/.bashrc", shellutil.BashIntegrationDir)
+			// REBRAND: ~/.waveterm/ → ~/.terminolgy/ (shell integration dir on remote WSL targets)
+			bashPath := fmt.Sprintf("~/.terminolgy/%s/.bashrc", shellutil.BashIntegrationDir) // was ~/.waveterm/
 			shellOpts = append(shellOpts, "--rcfile", bashPath)
 		} else if shellType == shellutil.ShellType_fish {
 			if cmdOpts.Login {
 				shellOpts = append(shellOpts, "-l")
 			}
 			// source the wave.fish file
-			waveFishPath := fmt.Sprintf("~/.waveterm/%s/wave.fish", shellutil.FishIntegrationDir)
+			// REBRAND: ~/.waveterm/ → ~/.terminolgy/ (fish integration path on remote WSL targets)
+			waveFishPath := fmt.Sprintf("~/.terminolgy/%s/wave.fish", shellutil.FishIntegrationDir) // was ~/.waveterm/
 			carg := fmt.Sprintf(`"source %s"`, waveFishPath)
 			shellOpts = append(shellOpts, "-C", carg)
 		} else if shellType == shellutil.ShellType_pwsh {
-			pwshPath := fmt.Sprintf("~/.waveterm/%s/wavepwsh.ps1", shellutil.PwshIntegrationDir)
+			// REBRAND: ~/.waveterm/ → ~/.terminolgy/ (pwsh integration path on remote WSL targets)
+			pwshPath := fmt.Sprintf("~/.terminolgy/%s/wavepwsh.ps1", shellutil.PwshIntegrationDir) // was ~/.waveterm/
 			// powershell is weird about quoted path executables and requires an ampersand first
 			shellPath = "& " + shellPath
 			shellOpts = append(shellOpts, "-ExecutionPolicy", "Bypass", "-NoExit", "-File", pwshPath)
@@ -259,7 +262,8 @@ func StartWslShellProc(ctx context.Context, termSize waveobj.TermSize, cmdStr st
 	conn.Infof(ctx, "WSL-NEWSESSION (StartWslShellProc)\n")
 
 	if shellType == shellutil.ShellType_zsh {
-		zshDir := fmt.Sprintf("~/.waveterm/%s", shellutil.ZshIntegrationDir)
+		// REBRAND: ~/.waveterm/ → ~/.terminolgy/ (zsh ZDOTDIR path on remote WSL targets)
+		zshDir := fmt.Sprintf("~/.terminolgy/%s", shellutil.ZshIntegrationDir) // was ~/.waveterm/
 		conn.Infof(ctx, "setting ZDOTDIR to %s\n", zshDir)
 		cmdCombined = fmt.Sprintf(`ZDOTDIR=%s %s`, zshDir, cmdCombined)
 	}
@@ -431,18 +435,21 @@ func StartRemoteShellProc(ctx context.Context, logCtx context.Context, termSize 
 		if shellType == shellutil.ShellType_bash {
 			// add --rcfile
 			// cant set -l or -i with --rcfile
-			bashPath := fmt.Sprintf("%s/.waveterm/%s/.bashrc", remoteInfo.HomeDir, shellutil.BashIntegrationDir)
+			// REBRAND: /.waveterm/ → /.terminolgy/ (shell integration dir on remote SSH targets)
+			bashPath := fmt.Sprintf("%s/.terminolgy/%s/.bashrc", remoteInfo.HomeDir, shellutil.BashIntegrationDir) // was .waveterm
 			shellOpts = append(shellOpts, "--rcfile", bashPath)
 		} else if shellType == shellutil.ShellType_fish {
 			if cmdOpts.Login {
 				shellOpts = append(shellOpts, "-l")
 			}
 			// source the wave.fish file
-			waveFishPath := fmt.Sprintf("%s/.waveterm/%s/wave.fish", remoteInfo.HomeDir, shellutil.FishIntegrationDir)
+			// REBRAND: /.waveterm/ → /.terminolgy/ (fish integration path on remote SSH targets)
+			waveFishPath := fmt.Sprintf("%s/.terminolgy/%s/wave.fish", remoteInfo.HomeDir, shellutil.FishIntegrationDir) // was .waveterm
 			carg := fmt.Sprintf(`"source %s"`, waveFishPath)
 			shellOpts = append(shellOpts, "-C", carg)
 		} else if shellType == shellutil.ShellType_pwsh {
-			pwshPath := fmt.Sprintf("%s/.waveterm/%s/wavepwsh.ps1", remoteInfo.HomeDir, shellutil.PwshIntegrationDir)
+			// REBRAND: /.waveterm/ → /.terminolgy/ (pwsh integration path on remote SSH targets)
+			pwshPath := fmt.Sprintf("%s/.terminolgy/%s/wavepwsh.ps1", remoteInfo.HomeDir, shellutil.PwshIntegrationDir) // was .waveterm
 			// powershell is weird about quoted path executables and requires an ampersand first
 			shellPath = "& " + shellPath
 			shellOpts = append(shellOpts, "-ExecutionPolicy", "Bypass", "-NoExit", "-File", pwshPath)
@@ -492,7 +499,8 @@ func StartRemoteShellProc(ctx context.Context, logCtx context.Context, termSize 
 	session.Stdout = remoteStdoutWrite
 	session.Stderr = remoteStdoutWrite
 	if shellType == shellutil.ShellType_zsh {
-		zshDir := fmt.Sprintf("~/.waveterm/%s", shellutil.ZshIntegrationDir)
+		// REBRAND: ~/.waveterm/ → ~/.terminolgy/ (zsh ZDOTDIR on remote SSH targets)
+		zshDir := fmt.Sprintf("~/.terminolgy/%s", shellutil.ZshIntegrationDir) // was ~/.waveterm/
 		conn.Infof(logCtx, "setting ZDOTDIR to %s\n", zshDir)
 		cmdCombined = fmt.Sprintf(`ZDOTDIR=%s %s`, zshDir, cmdCombined)
 	}
@@ -556,18 +564,19 @@ func StartRemoteShellJob(ctx context.Context, logCtx context.Context, termSize w
 	conn.Debugf(logCtx, "cmdStr: %q\n", cmdStr)
 
 	if cmdStr == "" {
+		// REBRAND: /.waveterm/ → /.terminolgy/ (shell integration paths on remote SSH job targets)
 		if shellType == shellutil.ShellType_bash {
-			bashPath := fmt.Sprintf("%s/.waveterm/%s/.bashrc", remoteInfo.HomeDir, shellutil.BashIntegrationDir)
+			bashPath := fmt.Sprintf("%s/.terminolgy/%s/.bashrc", remoteInfo.HomeDir, shellutil.BashIntegrationDir) // was .waveterm
 			shellOpts = append(shellOpts, "--rcfile", bashPath)
 		} else if shellType == shellutil.ShellType_fish {
 			if cmdOpts.Login {
 				shellOpts = append(shellOpts, "-l")
 			}
-			waveFishPath := fmt.Sprintf("%s/.waveterm/%s/wave.fish", remoteInfo.HomeDir, shellutil.FishIntegrationDir)
+			waveFishPath := fmt.Sprintf("%s/.terminolgy/%s/wave.fish", remoteInfo.HomeDir, shellutil.FishIntegrationDir) // was .waveterm
 			carg := fmt.Sprintf(`source %s`, waveFishPath)
 			shellOpts = append(shellOpts, "-C", carg)
 		} else if shellType == shellutil.ShellType_pwsh {
-			pwshPath := fmt.Sprintf("%s/.waveterm/%s/wavepwsh.ps1", remoteInfo.HomeDir, shellutil.PwshIntegrationDir)
+			pwshPath := fmt.Sprintf("%s/.terminolgy/%s/wavepwsh.ps1", remoteInfo.HomeDir, shellutil.PwshIntegrationDir) // was .waveterm
 			shellOpts = append(shellOpts, "-ExecutionPolicy", "Bypass", "-NoExit", "-File", pwshPath)
 		} else {
 			if cmdOpts.Login {
@@ -593,7 +602,8 @@ func StartRemoteShellJob(ctx context.Context, logCtx context.Context, termSize w
 	env := make(map[string]string)
 	env["TERM"] = shellutil.DefaultTermType
 	if shellType == shellutil.ShellType_zsh {
-		zshDir := fmt.Sprintf("%s/.waveterm/%s", remoteInfo.HomeDir, shellutil.ZshIntegrationDir)
+		// REBRAND: /.waveterm/ → /.terminolgy/ (zsh ZDOTDIR on remote SSH job targets)
+		zshDir := fmt.Sprintf("%s/.terminolgy/%s", remoteInfo.HomeDir, shellutil.ZshIntegrationDir) // was .waveterm
 		conn.Infof(logCtx, "setting ZDOTDIR to %s\n", zshDir)
 		env["ZDOTDIR"] = zshDir
 	}

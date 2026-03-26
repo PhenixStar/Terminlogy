@@ -19,7 +19,8 @@ import (
 	dbfs "github.com/wavetermdev/waveterm/db"
 )
 
-const WStoreDBName = "waveterm.db"
+// REBRAND: waveterm.db → terminolgy.db (SQLite database file name)
+const WStoreDBName = "terminolgy.db" // was "waveterm.db"
 
 type TxWrap = txwrap.TxWrap
 

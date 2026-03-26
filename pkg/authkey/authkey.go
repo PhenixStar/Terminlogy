@@ -11,7 +11,8 @@ import (
 
 var authkey string
 
-const WaveAuthKeyEnv = "WAVETERM_AUTH_KEY"
+// REBRAND: WAVETERM_AUTH_KEY → TERMINOLGY_AUTH_KEY (env var holding the server auth key)
+const WaveAuthKeyEnv = "TERMINOLGY_AUTH_KEY" // was "WAVETERM_AUTH_KEY"
 const AuthKeyHeader = "X-AuthKey"
 
 func ValidateIncomingRequest(r *http.Request) error {

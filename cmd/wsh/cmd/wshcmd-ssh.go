@@ -66,7 +66,7 @@ func sshRun(cmd *cobra.Command, args []string) (rtnErr error) {
 	if newBlock {
 		tabId := getTabIdFromEnv()
 		if tabId == "" {
-			return fmt.Errorf("no WAVETERM_TABID env var set")
+			return fmt.Errorf("no TERMINOLGY_TABID env var set") // REBRAND: was WAVETERM_TABID
 		}
 
 		// Create a new block with the SSH connection

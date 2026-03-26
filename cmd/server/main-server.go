@@ -68,7 +68,8 @@ const DiagnosticTick = 10 * time.Minute
 var shutdownOnce sync.Once
 
 func init() {
-	envFilePath := os.Getenv("WAVETERM_ENVFILE")
+	// REBRAND: WAVETERM_ENVFILE → TERMINOLGY_ENVFILE (env file path override)
+	envFilePath := os.Getenv("TERMINOLGY_ENVFILE") // was "WAVETERM_ENVFILE"
 	if envFilePath != "" {
 		log.Printf("applying env file: %s\n", envFilePath)
 		_ = godotenv.Load(envFilePath)
@@ -137,8 +138,9 @@ func diagnosticLoop() {
 	defer func() {
 		panichandler.PanicHandler("diagnosticLoop", recover())
 	}()
-	if os.Getenv("WAVETERM_NOPING") != "" {
-		log.Printf("WAVETERM_NOPING set, disabling diagnostic ping\n")
+	// REBRAND: WAVETERM_NOPING → TERMINOLGY_NOPING (env flag to disable diagnostic pings)
+	if os.Getenv("TERMINOLGY_NOPING") != "" { // was "WAVETERM_NOPING"
+		log.Printf("TERMINOLGY_NOPING set, disabling diagnostic ping\n") // was WAVETERM_NOPING
 		return
 	}
 	var lastSentDate string
@@ -409,14 +411,14 @@ func grabAndRemoveEnvVars() error {
 		return err
 	}
 
-	// Remove WAVETERM env vars that leak from prod => dev
-	os.Unsetenv("WAVETERM_CLIENTID")
-	os.Unsetenv("WAVETERM_WORKSPACEID")
-	os.Unsetenv("WAVETERM_TABID")
-	os.Unsetenv("WAVETERM_BLOCKID")
-	os.Unsetenv("WAVETERM_CONN")
-	os.Unsetenv("WAVETERM_JWT")
-	os.Unsetenv("WAVETERM_VERSION")
+	// REBRAND: WAVETERM_* → TERMINOLGY_* (unset shell session env vars that leak from prod → dev)
+	os.Unsetenv("TERMINOLGY_CLIENTID")    // was WAVETERM_CLIENTID
+	os.Unsetenv("TERMINOLGY_WORKSPACEID") // was WAVETERM_WORKSPACEID
+	os.Unsetenv("TERMINOLGY_TABID")       // was WAVETERM_TABID
+	os.Unsetenv("TERMINOLGY_BLOCKID")     // was WAVETERM_BLOCKID
+	os.Unsetenv("TERMINOLGY_CONN")        // was WAVETERM_CONN
+	os.Unsetenv("TERMINOLGY_JWT")         // was WAVETERM_JWT
+	os.Unsetenv("TERMINOLGY_VERSION")     // was WAVETERM_VERSION
 
 	return nil
 }
@@ -457,7 +459,8 @@ func maybeStartPprofServer() {
 
 func main() {
 	log.SetFlags(0) // disable timestamp since electron's winston logger already wraps with timestamp
-	log.SetPrefix("[wavesrv] ")
+	// REBRAND: [wavesrv] → [terminolgy-srv] (log prefix for the Go server binary)
+	log.SetPrefix("[terminolgy-srv] ") // was "[wavesrv] "
 	wavebase.WaveVersion = WaveVersion
 	wavebase.BuildTime = BuildTime
 	wshutil.DefaultRouter = wshutil.NewWshRouter()
@@ -606,7 +609,8 @@ func main() {
 			BuildTime = "0"
 		}
 		// use fmt instead of log here to make sure it goes directly to stderr
-		fmt.Fprintf(os.Stderr, "WAVESRV-ESTART ws:%s web:%s version:%s buildtime:%s\n", wsListener.Addr(), webListener.Addr(), WaveVersion, BuildTime)
+		// REBRAND: WAVESRV-ESTART → TERMINOLGY-SRV-ESTART (startup ready signal parsed by Electron emain; update emain-wavesrv.ts too)
+		fmt.Fprintf(os.Stderr, "TERMINOLGY-SRV-ESTART ws:%s web:%s version:%s buildtime:%s\n", wsListener.Addr(), webListener.Addr(), WaveVersion, BuildTime) // was WAVESRV-ESTART
 	}()
 	go wshutil.RunWshRpcOverListener(unixListener, nil)
 	web.RunWebServer(webListener) // blocking

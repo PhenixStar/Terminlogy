@@ -462,26 +462,27 @@ func makeSwapToken(ctx context.Context, logCtx context.Context, blockId string, 
 		Env:   make(map[string]string),
 		Exp:   time.Now().Add(5 * time.Minute),
 	}
-	token.Env["TERM_PROGRAM"] = "waveterm"
-	token.Env["WAVETERM_BLOCKID"] = blockId
-	token.Env["WAVETERM_VERSION"] = wavebase.WaveVersion
-	token.Env["WAVETERM"] = "1"
+	// REBRAND: WAVETERM_* → TERMINOLGY_* env vars injected into shell sessions
+	token.Env["TERM_PROGRAM"] = "terminolgy"                   // was "waveterm"
+	token.Env["TERMINOLGY_BLOCKID"] = blockId                  // was WAVETERM_BLOCKID
+	token.Env["TERMINOLGY_VERSION"] = wavebase.WaveVersion     // was WAVETERM_VERSION
+	token.Env["TERMINOLGY"] = "1"                              // was WAVETERM
 	tabId, err := wstore.DBFindTabForBlockId(ctx, blockId)
 	if err != nil {
 		log.Printf("error finding tab for block: %v\n", err)
 	} else {
-		token.Env["WAVETERM_TABID"] = tabId
+		token.Env["TERMINOLGY_TABID"] = tabId                  // was WAVETERM_TABID
 	}
 	if tabId != "" {
 		wsId, err := wstore.DBFindWorkspaceForTabId(ctx, tabId)
 		if err != nil {
 			log.Printf("error finding workspace for tab: %v\n", err)
 		} else {
-			token.Env["WAVETERM_WORKSPACEID"] = wsId
+			token.Env["TERMINOLGY_WORKSPACEID"] = wsId          // was WAVETERM_WORKSPACEID
 		}
 	}
-	token.Env["WAVETERM_CLIENTID"] = wstore.GetClientId()
-	token.Env["WAVETERM_CONN"] = remoteName
+	token.Env["TERMINOLGY_CLIENTID"] = wstore.GetClientId()    // was WAVETERM_CLIENTID
+	token.Env["TERMINOLGY_CONN"] = remoteName                   // was WAVETERM_CONN
 	envMap, err := resolveEnvMap(blockId, blockMeta, remoteName)
 	if err != nil {
 		log.Printf("error resolving env map: %v\n", err)

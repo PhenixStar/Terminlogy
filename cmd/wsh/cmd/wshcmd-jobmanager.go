@@ -47,14 +47,15 @@ func jobManagerRun(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("invalid clientid: must be a valid UUID")
 	}
 
-	publicKeyB64 := os.Getenv("WAVETERM_PUBLICKEY")
+	// REBRAND: WAVETERM_PUBLICKEY → TERMINOLGY_PUBLICKEY (JWT public key env var read by jobmanager)
+	publicKeyB64 := os.Getenv("TERMINOLGY_PUBLICKEY") // was "WAVETERM_PUBLICKEY"
 	if publicKeyB64 == "" {
-		return fmt.Errorf("WAVETERM_PUBLICKEY environment variable is not set")
+		return fmt.Errorf("TERMINOLGY_PUBLICKEY environment variable is not set") // was WAVETERM_PUBLICKEY
 	}
 
 	publicKeyBytes, err := base64.StdEncoding.DecodeString(publicKeyB64)
 	if err != nil {
-		return fmt.Errorf("failed to decode WAVETERM_PUBLICKEY: %v", err)
+		return fmt.Errorf("failed to decode TERMINOLGY_PUBLICKEY: %v", err) // was WAVETERM_PUBLICKEY
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)

@@ -4,14 +4,16 @@ if [ -f /etc/profile ]; then
     . /etc/profile
 fi
 
-WAVETERM_WSHBINDIR={{.WSHBINDIR}}
+# REBRAND: WAVETERM_WSHBINDIR → TERMINOLGY_TSHBINDIR (bin dir env var injected by Go server)
+TERMINOLGY_TSHBINDIR={{.WSHBINDIR}}
 
 # after /etc/profile which is likely to clobber the path
-export PATH="$WAVETERM_WSHBINDIR:$PATH"
+export PATH="$TERMINOLGY_TSHBINDIR:$PATH"
 
-# Source the dynamic script from wsh token
-eval "$(wsh token "$WAVETERM_SWAPTOKEN" bash 2> /dev/null)"
-unset WAVETERM_SWAPTOKEN
+# Source the dynamic script from tsh token
+# REBRAND: wsh → tsh (shell helper binary name); WAVETERM_SWAPTOKEN → TERMINOLGY_SWAPTOKEN
+eval "$(tsh token "$TERMINOLGY_SWAPTOKEN" bash 2> /dev/null)"
+unset TERMINOLGY_SWAPTOKEN
 
 # Source the first of ~/.bash_profile, ~/.bash_login, or ~/.profile that exists
 if [ -f ~/.bash_profile ]; then
@@ -22,12 +24,12 @@ elif [ -f ~/.profile ]; then
     . ~/.profile
 fi
 
-if [[ ":$PATH:" != *":$WAVETERM_WSHBINDIR:"* ]]; then
-    export PATH="$WAVETERM_WSHBINDIR:$PATH"
+if [[ ":$PATH:" != *":$TERMINOLGY_TSHBINDIR:"* ]]; then
+    export PATH="$TERMINOLGY_TSHBINDIR:$PATH"
 fi
-unset WAVETERM_WSHBINDIR
+unset TERMINOLGY_TSHBINDIR
 if type _init_completion &>/dev/null; then
-  source <(wsh completion bash)
+  source <(tsh completion bash)  # REBRAND: wsh → tsh
 fi
 
 # extdebug breaks bash-preexec semantics; bail out cleanly
@@ -39,11 +41,11 @@ fi
 
 # Source bash-preexec for proper preexec/precmd hook support
 if [ -z "${bash_preexec_imported:-}" ]; then
-    _WAVETERM_SI_BASHRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    if [ -f "$_WAVETERM_SI_BASHRC_DIR/bash_preexec.sh" ]; then
-        source "$_WAVETERM_SI_BASHRC_DIR/bash_preexec.sh"
+    _TERMINOLGY_SI_BASHRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    if [ -f "$_TERMINOLGY_SI_BASHRC_DIR/bash_preexec.sh" ]; then
+        source "$_TERMINOLGY_SI_BASHRC_DIR/bash_preexec.sh"
     fi
-    unset _WAVETERM_SI_BASHRC_DIR
+    unset _TERMINOLGY_SI_BASHRC_DIR
 fi
 
 # Check if bash-preexec was successfully imported
@@ -53,14 +55,14 @@ if [ -z "${bash_preexec_imported:-}" ]; then
     return 0
 fi
 
-_WAVETERM_SI_FIRSTPROMPT=1
+_TERMINOLGY_SI_FIRSTPROMPT=1  # REBRAND: was _TERMINOLGY_SI_FIRSTPROMPT
 
-# Wave Terminal Shell Integration
-_waveterm_si_blocked() {
+# Terminolgy Shell Integration
+_terminolgy_si_blocked() {  # REBRAND: was _terminolgy_si_blocked
     [[ -n "$TMUX" || -n "$STY" || "$TERM" == tmux* || "$TERM" == screen* ]]
 }
 
-_waveterm_si_urlencode() {
+_terminolgy_si_urlencode() {
     local s="$1"
     s="${s//%/%25}"
     s="${s// /%20}"
@@ -72,17 +74,17 @@ _waveterm_si_urlencode() {
     printf '%s' "$s"
 }
 
-_waveterm_si_osc7() {
-    _waveterm_si_blocked && return
-    local encoded_pwd=$(_waveterm_si_urlencode "$PWD")
+_terminolgy_si_osc7() {
+    _terminolgy_si_blocked && return
+    local encoded_pwd=$(_terminolgy_si_urlencode "$PWD")
     printf '\033]7;file://localhost%s\007' "$encoded_pwd"
 }
 
-_waveterm_si_precmd() {
+_terminolgy_si_precmd() {
     local _waveterm_si_status=$?
-    _waveterm_si_blocked && return
+    _terminolgy_si_blocked && return
     
-    if [ "$_WAVETERM_SI_FIRSTPROMPT" -eq 1 ]; then
+    if [ "$_TERMINOLGY_SI_FIRSTPROMPT" -eq 1 ]; then
         local uname_info
         uname_info=$(uname -smr 2>/dev/null)
         printf '\033]16162;M;{"shell":"bash","shellversion":"%s","uname":"%s","integration":true}\007' "$BASH_VERSION" "$uname_info"
@@ -90,13 +92,13 @@ _waveterm_si_precmd() {
         printf '\033]16162;D;{"exitcode":%d}\007' "$_waveterm_si_status"
     fi
     # OSC 7 sent on every prompt - bash has no chpwd hook for directory changes
-    _waveterm_si_osc7
+    _terminolgy_si_osc7
     printf '\033]16162;A\007'
-    _WAVETERM_SI_FIRSTPROMPT=0
+    _TERMINOLGY_SI_FIRSTPROMPT=0
 }
 
-_waveterm_si_preexec() {
-    _waveterm_si_blocked && return
+_terminolgy_si_preexec() {
+    _terminolgy_si_blocked && return
     
     local cmd="$1"
     local cmd_length=${#cmd}
@@ -113,5 +115,5 @@ _waveterm_si_preexec() {
 }
 
 # Add our functions to the bash-preexec arrays
-precmd_functions+=(_waveterm_si_precmd)
-preexec_functions+=(_waveterm_si_preexec)
+precmd_functions+=(_terminolgy_si_precmd)
+preexec_functions+=(_terminolgy_si_preexec)

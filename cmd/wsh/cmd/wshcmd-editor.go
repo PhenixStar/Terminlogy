@@ -57,7 +57,7 @@ func editorRun(cmd *cobra.Command, args []string) (rtnErr error) {
 
 	tabId := getTabIdFromEnv()
 	if tabId == "" {
-		return fmt.Errorf("no WAVETERM_TABID env var set")
+		return fmt.Errorf("no TERMINOLGY_TABID env var set") // REBRAND: was WAVETERM_TABID
 	}
 
 	wshCmd := wshrpc.CommandCreateBlockData{

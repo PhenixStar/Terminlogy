@@ -10,8 +10,9 @@ import (
 	"strings"
 )
 
-const DefaultAIEndpoint = "https://cfapi.waveterm.dev/api/waveai"
-const WaveAIEndpointEnvName = "WAVETERM_WAVEAI_ENDPOINT"
+// REBRAND: upstream AI cloud endpoint disabled for Terminolgy fork; WAVETERM_WAVEAI_ENDPOINT → TERMINOLGY_WAVEAI_ENDPOINT
+const DefaultAIEndpoint = ""                                              // was "https://cfapi.waveterm.dev/api/waveai" — disabled
+const WaveAIEndpointEnvName = "TERMINOLGY_WAVEAI_ENDPOINT"               // was "WAVETERM_WAVEAI_ENDPOINT"
 const DefaultAnthropicModel = "claude-sonnet-4-5"
 const DefaultOpenAIModel = "gpt-5-mini"
 const PremiumOpenAIModel = "gpt-5.1"

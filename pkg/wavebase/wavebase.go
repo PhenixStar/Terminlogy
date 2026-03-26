@@ -26,18 +26,19 @@ var WaveVersion = "0.0.0"
 var BuildTime = "0"
 
 const (
-	WaveConfigHomeEnvVar           = "WAVETERM_CONFIG_HOME"
-	WaveDataHomeEnvVar             = "WAVETERM_DATA_HOME"
-	WaveAppPathVarName             = "WAVETERM_APP_PATH"
-	WaveAppResourcesPathVarName    = "WAVETERM_RESOURCES_PATH"
-	WaveAppElectronExecPathVarName = "WAVETERM_ELECTRONEXECPATH"
-	WaveDevVarName                 = "WAVETERM_DEV"
-	WaveDevViteVarName             = "WAVETERM_DEV_VITE"
-	WaveWshForceUpdateVarName      = "WAVETERM_WSHFORCEUPDATE"
-	WaveNoConfirmQuitVarName       = "WAVETERM_NOCONFIRMQUIT"
+	// REBRAND: WAVETERM_* → TERMINOLGY_* env var constants (process-level env vars read/set by the server binary)
+	WaveConfigHomeEnvVar           = "TERMINOLGY_CONFIG_HOME"  // was WAVETERM_CONFIG_HOME
+	WaveDataHomeEnvVar             = "TERMINOLGY_DATA_HOME"    // was WAVETERM_DATA_HOME
+	WaveAppPathVarName             = "TERMINOLGY_APP_PATH"     // was WAVETERM_APP_PATH
+	WaveAppResourcesPathVarName    = "TERMINOLGY_RESOURCES_PATH" // was WAVETERM_RESOURCES_PATH
+	WaveAppElectronExecPathVarName = "TERMINOLGY_ELECTRONEXECPATH" // was WAVETERM_ELECTRONEXECPATH
+	WaveDevVarName                 = "TERMINOLGY_DEV"          // was WAVETERM_DEV
+	WaveDevViteVarName             = "TERMINOLGY_DEV_VITE"     // was WAVETERM_DEV_VITE
+	WaveWshForceUpdateVarName      = "TERMINOLGY_TSHFORCEUPDATE" // was WAVETERM_WSHFORCEUPDATE
+	WaveNoConfirmQuitVarName       = "TERMINOLGY_NOCONFIRMQUIT" // was WAVETERM_NOCONFIRMQUIT
 
-	WaveJwtTokenVarName  = "WAVETERM_JWT"
-	WaveSwapTokenVarName = "WAVETERM_SWAPTOKEN"
+	WaveJwtTokenVarName  = "TERMINOLGY_JWT"       // was WAVETERM_JWT
+	WaveSwapTokenVarName = "TERMINOLGY_SWAPTOKEN" // was WAVETERM_SWAPTOKEN
 )
 
 const (
@@ -61,10 +62,13 @@ const DomainSocketBaseName = "wave.sock"
 const RemoteDomainSocketBaseName = "wave-remote.sock"
 const WaveDBDir = "db"
 const ConfigDir = "config"
-const RemoteWaveHomeDirName = ".waveterm"
+// REBRAND: .waveterm → .terminolgy (remote home directory name used on SSH targets)
+const RemoteWaveHomeDirName = ".terminolgy" // was ".waveterm"
 const RemoteWshBinDirName = "bin"
-const RemoteFullWshBinPath = "~/.waveterm/bin/wsh"
-const RemoteFullDomainSocketPath = "~/.waveterm/wave-remote.sock"
+// REBRAND: ~/.waveterm/bin/wsh → ~/.terminolgy/bin/tsh (remote shell helper binary path)
+const RemoteFullWshBinPath = "~/.terminolgy/bin/tsh" // was "~/.waveterm/bin/wsh"
+// REBRAND: ~/.waveterm/wave-remote.sock → ~/.terminolgy/terminolgy-remote.sock (remote domain socket)
+const RemoteFullDomainSocketPath = "~/.terminolgy/terminolgy-remote.sock" // was "~/.waveterm/wave-remote.sock"
 
 const AppPathBinDir = "bin"
 
@@ -186,7 +190,8 @@ func GetDomainSocketName() string {
 // returns a Unix-style path for the remote socket (using fmt.Sprintf instead of filepath.Join
 // because this path is for a remote Unix system, not the local OS which might be Windows)
 func GetPersistentRemoteSockName(clientId string) string {
-	return fmt.Sprintf("~/.waveterm/client/%s/waveterm.sock", clientId)
+	// REBRAND: ~/.waveterm/client/%s/waveterm.sock → ~/.terminolgy/client/%s/terminolgy.sock (per-client domain socket path)
+	return fmt.Sprintf("~/.terminolgy/client/%s/terminolgy.sock", clientId) // was "~/.waveterm/client/%s/waveterm.sock"
 }
 
 func EnsureWaveDataDir() error {
@@ -478,7 +483,8 @@ func getSystemSummary(ctx context.Context) string {
 
 // job socket path on remote machine
 func GetRemoteJobSocketPath(jobId string) string {
-	socketDir := filepath.Join("/tmp", fmt.Sprintf("waveterm-%d", os.Getuid()))
+	// REBRAND: waveterm-%d → terminolgy-%d (temp dir prefix for job sockets on remote machines)
+	socketDir := filepath.Join("/tmp", fmt.Sprintf("terminolgy-%d", os.Getuid())) // was "waveterm-%d"
 	return filepath.Join(socketDir, fmt.Sprintf("%s.sock", jobId))
 }
 
@@ -491,6 +497,7 @@ func GetRemoteJobFilePath(jobId string, extension string) string {
 // job file dir on remote machines
 func GetRemoteJobLogDir() string {
 	homeDir := GetHomeDir()
-	jobDir := filepath.Join(homeDir, ".waveterm", "jobs")
+	// REBRAND: .waveterm/jobs → .terminolgy/jobs (job log directory on remote machines)
+	jobDir := filepath.Join(homeDir, ".terminolgy", "jobs") // was ".waveterm", "jobs"
 	return jobDir
 }

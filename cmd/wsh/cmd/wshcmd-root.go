@@ -84,7 +84,8 @@ func OutputHelpMessage(cmd *cobra.Command) {
 func preRunSetupRpcClient(cmd *cobra.Command, args []string) error {
 	jwtToken := os.Getenv(wshutil.WaveJwtTokenVarName)
 	if jwtToken == "" {
-		return fmt.Errorf("wsh must be run inside a Wave-managed SSH session (WAVETERM_JWT not found)")
+		// REBRAND: WAVETERM_JWT → TERMINOLGY_JWT (JWT env var name shown in error message)
+		return fmt.Errorf("wsh must be run inside a Terminolgy-managed SSH session (TERMINOLGY_JWT not found)") // was WAVETERM_JWT
 	}
 	err := setupRpcClient(nil, jwtToken)
 	if err != nil {
@@ -162,7 +163,8 @@ func setupRpcClient(serverImpl wshutil.ServerImpl, jwtToken string) error {
 	if err != nil {
 		return fmt.Errorf("error authenticating: %v", err)
 	}
-	blockId := os.Getenv("WAVETERM_BLOCKID")
+	// REBRAND: WAVETERM_BLOCKID → TERMINOLGY_BLOCKID (block ID env var read by wsh commands)
+	blockId := os.Getenv("TERMINOLGY_BLOCKID") // was "WAVETERM_BLOCKID"
 	if blockId != "" {
 		peerInfo := fmt.Sprintf("domain:block:%s", blockId)
 		wshclient.SetPeerInfoCommand(RpcClient, peerInfo, &wshrpc.RpcOpts{Route: wshutil.ControlRoute})
@@ -184,9 +186,10 @@ func resolveSimpleId(id string) (*waveobj.ORef, error) {
 		}
 		return &orefObj, nil
 	}
-	blockId := os.Getenv("WAVETERM_BLOCKID")
+	// REBRAND: WAVETERM_BLOCKID → TERMINOLGY_BLOCKID
+	blockId := os.Getenv("TERMINOLGY_BLOCKID") // was "WAVETERM_BLOCKID"
 	if blockId == "" {
-		return nil, fmt.Errorf("no WAVETERM_BLOCKID env var set")
+		return nil, fmt.Errorf("no TERMINOLGY_BLOCKID env var set") // was WAVETERM_BLOCKID
 	}
 	rtnData, err := wshclient.ResolveIdsCommand(RpcClient, wshrpc.CommandResolveIdsData{
 		BlockId: blockId,
@@ -203,7 +206,8 @@ func resolveSimpleId(id string) (*waveobj.ORef, error) {
 }
 
 func getTabIdFromEnv() string {
-	return os.Getenv("WAVETERM_TABID")
+	// REBRAND: WAVETERM_TABID → TERMINOLGY_TABID (tab ID env var read by wsh commands)
+	return os.Getenv("TERMINOLGY_TABID") // was "WAVETERM_TABID"
 }
 
 // this will send wsh activity to the client running on *your* local machine (it does not contact any wave cloud infrastructure)

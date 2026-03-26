@@ -221,10 +221,11 @@ func WaveshellLocalEnvVars(termType string) map[string]string {
 		rtn["TERM"] = termType
 	}
 	// these are not necessary since they should be set with the swap token, but no harm in setting them here
-	rtn["TERM_PROGRAM"] = "waveterm"
-	rtn["WAVETERM"], _ = os.Executable()
-	rtn["WAVETERM_VERSION"] = wavebase.WaveVersion
-	rtn["WAVETERM_WSHBINDIR"] = filepath.Join(wavebase.GetWaveDataDir(), WaveHomeBinDir)
+	// REBRAND: WAVETERM_* → TERMINOLGY_* env vars injected into local shell sessions
+	rtn["TERM_PROGRAM"] = "terminolgy"                                                   // was "waveterm"
+	rtn["TERMINOLGY"], _ = os.Executable()                                               // was WAVETERM
+	rtn["TERMINOLGY_VERSION"] = wavebase.WaveVersion                                     // was WAVETERM_VERSION
+	rtn["TERMINOLGY_TSHBINDIR"] = filepath.Join(wavebase.GetWaveDataDir(), WaveHomeBinDir) // was WAVETERM_WSHBINDIR
 	return rtn
 }
 
@@ -482,16 +483,17 @@ func initCustomShellStartupFilesInternal() error {
 		log.Printf("error (non-fatal), could not resolve wsh binary %q: %v\n", wshFullPath, err)
 		return nil
 	}
-	wshDstPath := filepath.Join(binDir, "wsh")
+	// REBRAND: wsh → tsh (shell helper binary name in the bin directory)
+	wshDstPath := filepath.Join(binDir, "tsh") // was "wsh"
 	if runtime.GOOS == "windows" {
 		wshDstPath = wshDstPath + ".exe"
 	}
 	err = utilfn.AtomicRenameCopy(wshDstPath, wshFullPath, 0755)
 	if err != nil {
-		return fmt.Errorf("error copying wsh binary to bin: %v", err)
+		return fmt.Errorf("error copying tsh binary to bin: %v", err) // was wsh
 	}
 	wshBaseName := filepath.Base(wshFullPath)
-	log.Printf("wsh binary successfully copied from %q to %q\n", wshBaseName, wshDstPath)
+	log.Printf("tsh binary successfully copied from %q to %q\n", wshBaseName, wshDstPath) // was wsh
 	return nil
 }
 

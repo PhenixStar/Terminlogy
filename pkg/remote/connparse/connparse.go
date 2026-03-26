@@ -17,7 +17,8 @@ const (
 	ConnectionTypeWsh = "wsh"
 
 	ConnHostCurrent = "current"
-	ConnHostWaveSrv = "wavesrv"
+	// REBRAND: "wavesrv" → "terminolgy-srv" (internal host constant for the main server route)
+	ConnHostWaveSrv = "terminolgy-srv" // was "wavesrv"
 )
 
 var windowsDriveRegex = regexp.MustCompile(`^[a-zA-Z]:`)

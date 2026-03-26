@@ -115,7 +115,8 @@ func CopyAndAddToEnvMap(envMap map[string]string, key string, val string) map[st
 func PruneInitialEnv(envMap map[string]string) map[string]string {
 	pruned := make(map[string]string)
 	for key, value := range envMap {
-		if strings.HasPrefix(key, "WAVETERM_") || strings.HasPrefix(key, "BASH_FUNC_") {
+		// REBRAND: WAVETERM_ → TERMINOLGY_ (filter out Terminolgy env vars from initial env passed to connserver)
+		if strings.HasPrefix(key, "TERMINOLGY_") || strings.HasPrefix(key, "BASH_FUNC_") { // was "WAVETERM_"
 			continue
 		}
 		if key == "XDG_SESSION_ID" || key == "SHLVL" || key == "S_COLORS" ||
