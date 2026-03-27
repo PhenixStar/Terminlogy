@@ -4,36 +4,244 @@ description: "SSH, WSL, and remote machine connections in Terminolgy."
 icon: "network-wired"
 ---
 
-{/* TODO: migrate from docs/docs/connections.mdx */}
+Terminolgy connects to remote machines over SSH and WSL, unifying them alongside your local terminal. Every widget — terminal, file preview, sysinfo — works identically regardless of which machine it is connected to.
 
-Terminolgy makes it easy to connect to remote machines via SSH or WSL.
+## Connecting to a Machine
 
-## Connecting to a Remote Machine
+Click the laptop icon in any block header and type a connection string:
 
-Click the connection button in the Terminolgy toolbar and enter `username@hostname` to open an SSH connection.
+<Tabs>
+  <Tab title="SSH">
+    ```
+    user@hostname
+    hostname
+    user@hostname:port
+    ```
+  </Tab>
+  <Tab title="WSL (Windows)">
+    ```
+    wsl://<distribution-name>
+    ```
+  </Tab>
+</Tabs>
+
+If the connection already exists in the dropdown, click it or navigate with arrow keys and press Enter.
+
+---
+
+## tsh Shell Extensions
+
+`tsh` is a small helper binary installed on remote machines to enable full widget integration. When tsh is active on a connection:
+
+- `~/.terminolgy/bin` is added to `PATH` for that session
+- Terminolgy environment variables are injected
+- `cmd:env` entries from `connections.json` are applied
+- Initialization scripts from `connections.json` are executed
+
+If tsh installation fails, Terminolgy falls back to a plain terminal — a broken-link icon appears in the block header.
+
+### Injected Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| `TERM_PROGRAM` | Set to `terminolgy` |
+| `TERMINOLGY` | Set to `1` |
+| `TERMINOLGY_BLOCKID` | ID of the current terminal block |
+| `TERMINOLGY_CLIENTID` | RPC client ID |
+| `TERMINOLGY_CONN` | Name of the current remote connection |
+| `TERMINOLGY_TABID` | Tab ID |
+| `TERMINOLGY_VERSION` | Current Terminolgy version |
+| `TERMINOLGY_WORKSPACEID` | Workspace ID |
+
+---
+
+## Adding Connections
+
+SSH connections are sourced from three places:
+
+1. `~/.ssh/config` — standard OpenSSH config
+2. `/etc/ssh/ssh_config` — system-wide SSH config
+3. `~/.config/terminolgy/connections.json` — Terminolgy's internal config
+
+<Steps>
+  <Step title="Via SSH config">
+    Add a `Host` block to `~/.ssh/config`:
+    ```
+    Host myserver
+        User deploy
+        HostName 203.0.113.10
+        IdentityFile ~/.ssh/id_ed25519
+        AddKeysToAgent yes
+    ```
+    Connect with `myserver` or `deploy@myserver`.
+  </Step>
+  <Step title="Via tsh CLI">
+    ```bash
+    tsh ssh user@hostname
+    ```
+    A successful connection is saved to `connections.json` automatically.
+  </Step>
+  <Step title="Type it directly">
+    Enter `user@hostname` in the connection box. On success, it is saved automatically.
+  </Step>
+</Steps>
+
+WSL connections are discovered from the Windows Registry automatically.
+
+---
+
+## SSH Config Parsing
+
+Terminolgy parses standard SSH config files (all keywords except `Match`). Supported keywords:
+
+| Keyword | Notes |
+|---------|-------|
+| `Host` | Wildcard hosts are resolved but not shown in dropdown |
+| `User` | Defaults to current local user |
+| `HostName` | Real hostname or IP |
+| `Port` | Default `22` |
+| `IdentityFile` | Multiple entries allowed; tried in order |
+| `BatchMode` | Disables interactive prompts |
+| `PubkeyAuthentication` | Default `yes` |
+| `PasswordAuthentication` | Default `yes` |
+| `KbdInteractiveAuthentication` | Default `yes` |
+| `PreferredAuthentications` | Supports `publickey`, `keyboard-interactive`, `password` |
+| `AddKeysToAgent` | `yes` or `no` only |
+| `IdentityAgent` | Override `SSH_AUTH_SOCK` |
+| `IdentitiesOnly` | Default `no` |
+| `ProxyJump` | Comma-separated jump proxy list |
+| `UserKnownHostsFile` | Default `~/.ssh/known_hosts` |
+| `GlobalKnownHostsFile` | Default `/etc/ssh/ssh_known_hosts` |
+
+### SSH Agent Detection
+
+Terminolgy resolves the identity agent in this order:
+
+1. `ssh:identityagent` in `connections.json` (or `IdentityAgent` in SSH config)
+2. **Windows:** built-in OpenSSH pipe `\\.\pipe\openssh-ssh-agent`
+3. **macOS/Linux:** `SSH_AUTH_SOCK` from shell environment
+
+---
+
+## Internal connections.json Reference
+
+`~/.config/terminolgy/connections.json` lets you override or extend any connection:
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `conn:wshenabled` | bool | Enable tsh for this connection (default `true`) |
+| `conn:askbeforewshinstall` | bool | Prompt before installing tsh (default `true`) |
+| `conn:wshpath` | string | Path to tsh binary on the remote (default `~/.terminolgy/bin/tsh`) |
+| `conn:shellpath` | string | Shell path on the remote |
+| `conn:ignoresshconfig` | bool | Ignore `~/.ssh/config` for this connection |
+| `display:hidden` | bool | Hide from connection dropdown |
+| `display:order` | float | Sort order in dropdown |
+| `term:fontsize` | int | Per-connection terminal font size |
+| `term:fontfamily` | string | Per-connection terminal font family |
+| `term:theme` | string | Per-connection terminal theme |
+| `cmd:env` | object | Key-value env variables injected at connect (requires tsh) |
+| `cmd:initscript` | string | Init script path or inline script — runs for all shells |
+| `cmd:initscript.sh` | string | Init script for bash/zsh |
+| `cmd:initscript.bash` | string | Init script for bash only |
+| `cmd:initscript.zsh` | string | Init script for zsh only |
+| `cmd:initscript.pwsh` | string | Init script for PowerShell |
+| `cmd:initscript.fish` | string | Init script for fish |
+| `ssh:user` | string | Override username |
+| `ssh:hostname` | string | Override hostname/IP |
+| `ssh:port` | string | Override port |
+| `ssh:identityfile` | string[] | Identity files (prepended before SSH config values) |
+| `ssh:identitiesonly` | bool | Use only specified identity files |
+| `ssh:passwordsecretname` | string | Secret store key for SSH password (avoids prompts) |
+| `ssh:proxyjump` | string[] | Jump proxy hosts |
+
+### Example Configurations
+
+<AccordionGroup>
+  <Accordion title="Hide a connection from the dropdown">
+    ```json
+    {
+      "git@github.com": {
+        "display:hidden": true
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Push a rarely-used connection to the bottom">
+    ```json
+    {
+      "myuser@rarelyused:9999": {
+        "display:order": 100
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Apply a distinct theme to a connection">
+    ```json
+    {
+      "deploy@prod-server": {
+        "term:theme": "warmyellow",
+        "term:fontsize": 16,
+        "term:fontfamily": "menlo"
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Define a connection entirely in connections.json (no SSH config needed)">
+    ```json
+    {
+      "myuser@myhost": {
+        "ssh:hostname": "192.0.2.10",
+        "ssh:identityfile": ["~/.ssh/mykey"],
+        "ssh:identitiesonly": true,
+        "ssh:addkeystoagent": true
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Disable tsh for a legacy connection">
+    ```json
+    {
+      "root@legacy-host": {
+        "conn:wshenabled": false
+      }
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Managing Connections via CLI
 
 ```bash
-# Connect via tsh
-tsh ssh user@remote-host
-tsh ssh -i ~/.ssh/mykey.pem user@remote-host
+# Connect from CLI
+tsh ssh user@hostname
+tsh ssh -i ~/.ssh/mykey.pem user@hostname
+
+# View connection status
+tsh conn status
 ```
 
-## WSL (Windows)
+---
 
-On Windows, Terminolgy integrates with WSL distributions. Click the connection button and select your WSL distribution from the list.
+## Troubleshooting
 
-## Accessing Local Files from Remote
+<AccordionGroup>
+  <Accordion title="Enable connection debug logs">
+    Click the gear icon in the block header → **Debug Connection** → select `Info` or `Verbose`. Debug output prints to the terminal.
 
-When connected to a remote machine, use `tsh://local/~/` to access your local filesystem:
+    For full app logs: `tsh wavepath log`
+  </Accordion>
 
-```bash
-# Read a local config file from the remote machine
-tsh file cat tsh://local/~/config/app.json
+  <Accordion title="tsh not working — unsupported shell">
+    tsh supports: `bash`, `zsh`, `pwsh`, `fish`. For other shells, set `conn:shellpath` in `connections.json` to a supported shell path, then restart Terminolgy.
+  </Accordion>
 
-# Shorthand
-tsh file cat /~/config/app.json
-```
-
-See [TSH Remote Browse](/tsh/remote-browse) for full details.
-
-{/* TODO: migrate full connections reference from docs/docs/connections.mdx */}
+  <Accordion title="AllowTcpForwarding disabled on remote sshd">
+    Check `/etc/ssh/sshd_config` on the remote. If `AllowTcpForwarding no` is set, change it to `yes` or `local`, restart `sshd`, then restart Terminolgy.
+  </Accordion>
+</AccordionGroup>

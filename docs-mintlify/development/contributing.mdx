@@ -4,25 +4,84 @@ description: "How to contribute to Terminolgy — docs, code, and community."
 icon: "code-pull-request"
 ---
 
-{/* TODO: migrate from docs/docs/faq.mdx and general contributing info */}
+Terminolgy is an opinionated project with a single active maintainer. Contributions are welcome, but alignment matters more than volume.
 
-We welcome contributions of all kinds — bug reports, feature requests, documentation improvements, and code.
+## What Makes a Good Contribution
+
+The following are most likely to be accepted:
+
+<CardGroup cols={2}>
+  <Card title="Bug Fixes" icon="bug">
+    Clear reproduction steps help immensely. Small, focused fixes are reviewed quickly.
+  </Card>
+  <Card title="Documentation" icon="book">
+    Typo fixes, clarifications, and additional examples — open a PR directly, no discussion needed.
+  </Card>
+  <Card title="Discussed Features" icon="comments">
+    Features that were aligned on in Discord first. Do not open a PR for a new feature without prior discussion.
+  </Card>
+  <Card title="Focused Changes" icon="scissors">
+    One PR = one logical change. Easy to review, low risk.
+  </Card>
+</CardGroup>
+
+---
+
+## Before You Start
+
+**Small, obvious fixes** (typos, narrowly-scoped bugs, small docs improvements): open a PR directly.
+
+**Everything else** — new features, UI changes, refactors, performance rewrites, architectural changes — **discuss in Discord first**.
+
+<Warning>
+Pull requests introducing larger changes without prior discussion will be closed without detailed review. This is not meant to discourage contribution — it ensures alignment before significant work is done.
+</Warning>
+
+**Where to discuss:** [Discord](https://discord.gg/XfvZ334gwU) is the preferred channel.
+
+---
+
+## Contribution Guidelines
+
+### Keep Changes Focused
+
+Only change what is necessary for your stated goal. If you are fixing a bug in one file, do not:
+
+- Reformat other files
+- Clean up unrelated code
+- Fix style issues in files you didn't need to touch
+- Bundle multiple unrelated fixes in one PR
+
+Unfocused PRs require more review time and back-and-forth. Submit cleanup work as separate, explicitly scoped PRs — after discussion.
+
+### AI-Assisted Contributions
+
+AI-assisted contributions are welcome, but PRs must reflect clear understanding of the codebase, existing patterns, and project direction. Low-effort or poorly supervised AI-generated changes will be closed.
+
+---
 
 ## Reporting Issues
 
-- **Bug reports**: [GitHub Issues](https://github.com/PhenixStar/terminolgy/issues)
-- **Feature requests**: [GitHub Issues → Feature Request](https://github.com/PhenixStar/terminolgy/issues/new/choose)
-- **Questions**: [Discord community](https://discord.gg/XfvZ334gwU)
+- **Bug reports:** [GitHub Issues](https://github.com/PhenixStar/terminolgy/issues)
+- **Feature requests:** discuss in [Discord](https://discord.gg/XfvZ334gwU) before filing
+- **Security issues:** see [SECURITY.md](https://github.com/PhenixStar/terminolgy/blob/main/SECURITY.md)
 
-## Contributing Code
+---
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Open a pull request
+## Community
 
-## Contributing Docs
+- [Discord](https://discord.gg/XfvZ334gwU) — primary community channel
+- [GitHub Discussions](https://github.com/PhenixStar/terminolgy/discussions) — longer-form questions
 
-The docs are open-source. Click "Edit this page" on any docs page to go directly to the GitHub editor for that document.
+---
 
-{/* TODO: migrate FAQ content from docs/docs/faq.mdx */}
+## What This Project Is Not
+
+To set clear expectations:
+
+- Terminolgy is not designed as a beginner-friendly contribution project
+- There are no curated "good first issue" labels or mentorship tracks
+- Large, unsolicited changes are unlikely to be accepted even if technically correct
+- Mechanical refactors and broad style changes are not helpful
+
+Review bandwidth is limited. This means being selective is necessary, not hostile.

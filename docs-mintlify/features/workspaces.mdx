@@ -4,21 +4,98 @@ description: "Organize multiple projects with isolated workspaces."
 icon: "briefcase"
 ---
 
-{/* TODO: migrate from docs/docs/workspaces.mdx */}
+Workspaces are isolated environments for different projects. Each workspace has its own set of tabs and layouts, and persists independently between sessions.
 
-Workspaces let you group related tabs and settings under a single project context.
+## Workspace Switcher
+
+The Workspace Switcher button sits to the left of the tab bar. Clicking it opens a list of all saved workspaces for the current installation. Each workspace has a customizable icon, icon color, and name.
+
+- **Active workspace:** marked with a checkmark
+- **Open in another window:** marked with a window icon
+- **Hover over an entry:** reveals a pencil icon to edit name/icon/color
+
+---
 
 ## Creating a Workspace
 
-Access workspaces from the workspace selector in the top-left of the Terminolgy window.
+Every new window starts with a blank, unsaved workspace. There are three ways to create a named workspace:
 
-## Workspace Scoped Variables
+<Steps>
+  <Step title="New window">
+    Open a new window via **File** → **New Window** or the global keybinding. This creates a new window and a new workspace within it.
+  </Step>
+  <Step title="Workspace menu">
+    Go to **Workspace** app menu → **New Workspace**. The current window switches to the new workspace.
+  </Step>
+  <Step title="Workspace Switcher button">
+    When in a saved workspace, click **Create new workspace** at the bottom of the switcher.
+  </Step>
+</Steps>
 
-Use `tsh setvar` with workspace scope to keep variables isolated to a project:
+---
+
+## Saving a Workspace
+
+<Info>
+A new workspace is ephemeral — it is deleted when the window closes, unless saved. Exception: the **last open window** is always preserved and reopened on next launch, regardless of whether its workspace is saved.
+</Info>
+
+To persist a workspace, click **Save workspace** at the bottom of the Workspace Switcher.
+
+Once saved, the workspace appears in the switcher list as `New Workspace (<random string>)`. Rename it and set an icon via the pencil edit button.
+
+---
+
+## Switching Workspaces
+
+<Tabs>
+  <Tab title="Via Workspace Switcher">
+    Open the switcher and click any workspace in the list.
+
+    If the workspace is already open in another window, that window takes focus.
+
+    If the workspace is not currently open, your current window switches to it.
+  </Tab>
+  <Tab title="Via app menu">
+    Go to **Workspace** → select a workspace from the list.
+  </Tab>
+</Tabs>
+
+<Warning>
+If your current workspace is unsaved and you switch to a different workspace in the same window, you will be prompted. Choosing "current window" **permanently deletes** the unsaved workspace and its contents.
+</Warning>
+
+---
+
+## Editing a Workspace
+
+Hover over the workspace in the switcher and click the pencil icon. The editor panel lets you change:
+
+- **Name** — displayed in the switcher and window title
+- **Icon** — from the icon picker
+- **Icon color** — color applied to the icon
+
+Changes are saved automatically.
+
+<Info>
+The tabs, layouts, and terminal/AI histories of a saved workspace are persisted automatically. Unsaved file editor changes and webpage state are lost when the window closes.
+</Info>
+
+---
+
+## Workspace-Scoped Variables
+
+Use `tsh setvar` with workspace scope to keep configuration isolated per project:
 
 ```bash
+# Set a workspace-scoped variable
 tsh setvar -b workspace DEPLOY_ENV=staging
+
+# Read it back
 tsh getvar -b workspace DEPLOY_ENV
+
+# Use it in a command
+curl -H "Authorization: $(tsh getvar API_KEY)" https://api.example.com
 ```
 
-{/* TODO: migrate full workspace reference from docs/docs/workspaces.mdx */}
+Variables set at workspace scope are accessible from any terminal in that workspace but do not leak to other workspaces.

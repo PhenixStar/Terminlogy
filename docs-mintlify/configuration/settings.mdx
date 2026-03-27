@@ -4,33 +4,244 @@ description: "Customize Terminolgy's appearance, behavior, and key bindings."
 icon: "paintbrush"
 ---
 
-{/* TODO: migrate from docs/docs/config.mdx and docs/docs/keybindings.mdx */}
-
-Terminolgy uses a YAML-based configuration file located at `~/.config/terminolgy/settings.yaml`.
-
-## Opening the Config File
-
-```bash
-tsh edit ~/.config/terminolgy/settings.yaml
-```
-
-Or use the menu: **Terminolgy → Settings**.
-
-## Key Bindings
-
-Terminolgy supports customizable keyboard shortcuts. Common defaults:
-
-| Action | macOS | Windows/Linux |
-|--------|-------|---------------|
-| New tab | `Cmd+T` | `Ctrl+T` |
-| New block | `Cmd+N` | `Ctrl+N` |
-| Close block | `Cmd+W` | `Ctrl+W` |
-| Magnify block | `Cmd+M` | `Ctrl+M` |
-| Toggle AI panel | `Cmd+Shift+A` | `Ctrl+Shift+A` |
-| Navigate blocks | `Ctrl+Shift+Arrow` | `Ctrl+Shift+Arrow` |
+Terminolgy's configuration files live at `~/.config/terminolgy/`. The main file is `settings.json` — a flat JSON object using `:` as namespace separators instead of nested objects.
 
 <Info>
-  See the source file `docs/docs/keybindings.mdx` for the full key bindings reference.
+The easiest way to edit config files is `tsh editconfig`, which opens the file in Terminolgy's built-in editor.
+
+```bash
+tsh editconfig
+```
 </Info>
 
-{/* TODO: migrate full config reference from docs/docs/config.mdx */}
+## Configuration Keys
+
+### App
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `app:globalhotkey` | string | Systemwide keybinding to bring up the most recent window. Key names joined by `:` (e.g. `Ctrl:Option:t`). |
+| `app:defaultnewblock` | string | Default block for Cmd+N / Cmd+D. `"term"` (default) or `"launcher"`. |
+| `app:showoverlayblocknums` | bool | Show Ctrl+Shift block number overlay (default `true`). |
+| `app:ctrlvpaste` | bool | Enable Ctrl+V paste on Windows/Linux (default: Windows only). |
+| `app:confirmquit` | bool | Confirmation dialog when quitting (default `true`). |
+| `app:hideaibutton` | bool | Hide the AI button in the tab bar (default `false`). |
+| `app:disablectrlshiftarrows` | bool | Disable Ctrl+Shift block-navigation keybindings (default `false`). |
+| `app:disablectrlshiftdisplay` | bool | Disable the Ctrl+Shift visual indicator (default `false`). |
+| `app:focusfollowscursor` | string | Block focus follows cursor: `"off"` (default), `"on"`, or `"term"`. |
+| `app:tabbar` | string | Tab bar position: `"top"` (default) or `"left"`. |
+| `app:dismissarchitecturewarning` | bool | Suppress ARM64 translation warning on startup. |
+
+### AI
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `ai:preset` | string | Default AI preset key (e.g. `"ai@claude-sonnet"`). |
+| `ai:baseurl` | string | AI base URL — must be OpenAI-compatible. |
+| `ai:apitoken` | string | API token for your AI provider. |
+| `ai:apitype` | string | Provider: `"open_ai"` (default), `"azure"`, `"anthropic"`, `"perplexity"`, `"google"`. |
+| `ai:name` | string | Display name shown in the Terminolgy AI block header. |
+| `ai:model` | string | Model name passed to the API. |
+| `ai:apiversion` | string | Azure only — defaults to `"2023-05-15"` when apitype is `"azure"`. |
+| `ai:orgid` | string | OpenAI organization ID. |
+| `ai:maxtokens` | int | Max tokens per request (default `4000`). |
+| `ai:timeoutms` | int | API timeout in ms (default `60000`). |
+| `ai:proxyurl` | string | HTTP proxy URL for AI requests (not used for Terminolgy AI cloud). |
+
+### Terminal
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `term:fontsize` | float | Font size in px. |
+| `term:fontfamily` | string | Font family (must be installed on your system). |
+| `term:theme` | string | Default theme preset name (default `"default-dark"`). |
+| `term:transparency` | float64 | Background transparency: `0` opaque → `1` fully transparent (default `0.5`). |
+| `term:scrollback` | int | Scrollback buffer size, max `10000`. |
+| `term:copyonselect` | bool | Copy text on selection (default `true`). |
+| `term:disablewebgl` | bool | Disable WebGL acceleration. |
+| `term:localshellpath` | string | Override the default shell path for local terminals. |
+| `term:localshellopts` | string[] | Extra arguments for `term:localshellpath` (e.g. `["-NoLogo"]` for PowerShell). |
+| `term:allowbracketedpaste` | bool | Allow bracketed paste mode (default `false`). |
+| `term:shiftenternewline` | bool | Shift+Enter sends `\u001b\n` instead of CR — useful for AI coding tools (default `false`). |
+| `term:macoptionismeta` | bool | Treat Option as Meta on macOS (default `false`). |
+| `term:cursor` | string | Cursor style: `"block"` (default), `"underline"`, or `"bar"`. |
+| `term:cursorblink` | bool | Blinking cursor (default `false`). |
+| `term:bellsound` | bool | Play system beep on terminal bell (default `false`). |
+| `term:bellindicator` | bool | Visual indicator on terminal bell (default `false`). |
+| `term:osc52` | string | OSC 52 clipboard: `"always"` (default) or `"focus"`. |
+| `term:durable` | bool | Keep remote sessions alive across network disconnects (default `false`). |
+
+### Editor
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `editor:minimapenabled` | bool | Show minimap (default `true`). |
+| `editor:stickyscrollenabled` | bool | Pin context headers (class/method names) while scrolling (default `false`). |
+| `editor:wordwrap` | bool | Enable word wrap (default `false`). |
+| `editor:fontsize` | float64 | Font size in px (default `12`). |
+| `editor:inlinediff` | bool | Show diffs inline instead of side-by-side. |
+
+### Preview
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `preview:showhiddenfiles` | bool | Show hidden files in directory preview (default `true`). |
+| `preview:defaultsort` | string | Default sort: `"name"` (default) or `"modtime"`. |
+| `markdown:fontsize` | float64 | Normal text size in markdown preview (default `14`). |
+| `markdown:fixedfontsize` | float64 | Code block font size in markdown preview (default `12`). |
+
+### Web
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `web:openlinksinternally` | bool | Open links in Terminolgy's web widget (`false` = external browser). |
+| `web:defaulturl` | string | Default URL for the web widget when no URL is provided. |
+| `web:defaultsearch` | string | Search URL template — `{query}` is replaced by search term. |
+
+### Window
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `window:transparent` | bool | Window transparency — macOS/Windows only, requires restart. Cannot combine with `window:blur`. |
+| `window:blur` | bool | Window background blur — macOS/Windows only, requires restart. |
+| `window:opacity` | float64 | Window opacity `0`–`1` when transparent/blur is enabled. |
+| `window:bgcolor` | string | Window background color (hex `#rrggbb`). |
+| `window:reducedmotion` | bool | Disable most animations. |
+| `window:tilegapsize` | int | Gap in CSS pixels between blocks (default `3`). |
+| `window:magnifiedblockopacity` | float64 | Opacity of a magnified block (default `0.6`). |
+| `window:magnifiedblocksize` | float64 | Magnified block size as fraction of parent layout (default `0.9`). |
+| `window:magnifiedblockblurprimarypx` | int | Blur px directly behind a magnified block (default `10`). |
+| `window:magnifiedblockblursecondarypx` | int | Blur px on non-magnified blocks when another is magnified (default `2`). |
+| `window:maxtabcachesize` | int | Tabs to cache for fast switching (default `10`). |
+| `window:showmenubar` | bool | OS-native menu bar — Windows/Linux only, requires restart. |
+| `window:nativetitlebar` | bool | OS-native title bar — Windows/Linux only, requires restart. |
+| `window:disablehardwareacceleration` | bool | Disable Chromium hardware acceleration (requires restart). |
+| `window:fullscreenonlaunch` | bool | Launch in fullscreen (default `false`). |
+| `window:savelastwindow` | bool | Preserve and reopen the last closed window (default `true`). |
+| `window:confirmonclose` | bool | Confirm before closing a window with unsaved multi-tab workspace (default `true`). |
+| `window:dimensions` | string | Default window size as `WIDTHxHEIGHT` (e.g. `"1920x1080"`). |
+
+### Connections
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `conn:askbeforewshinstall` | bool | Prompt before installing tsh on new machines (default `true`). |
+| `conn:localhostdisplayname` | string | Override display name for localhost in the UI. |
+
+### Auto-Update
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `autoupdate:enabled` | bool | Check for updates automatically (requires restart). |
+| `autoupdate:intervalms` | float64 | Check interval in ms (requires restart). |
+| `autoupdate:installonquit` | bool | Install updates automatically on quit (requires restart). |
+| `autoupdate:channel` | string | `"latest"` (stable) or `"beta"` (requires restart). |
+
+### Tabs & Widgets
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `tab:background` | string | Auto-apply a background preset to new tabs (e.g. `"bg@ocean-depths"`). |
+| `tab:confirmclose` | bool | Confirm before closing a tab (default `false`). |
+| `widget:showhelp` | bool | Show help/tips in the right sidebar. |
+| `telemetry:enabled` | bool | Enable/disable anonymous telemetry. |
+
+---
+
+## Default Configuration
+
+```json
+{
+    "ai:preset": "ai@global",
+    "ai:model": "gpt-5-mini",
+    "ai:maxtokens": 4000,
+    "ai:timeoutms": 60000,
+    "app:defaultnewblock": "term",
+    "app:confirmquit": true,
+    "app:hideaibutton": false,
+    "app:disablectrlshiftarrows": false,
+    "app:disablectrlshiftdisplay": false,
+    "app:focusfollowscursor": "off",
+    "autoupdate:enabled": true,
+    "autoupdate:installonquit": true,
+    "autoupdate:intervalms": 3600000,
+    "conn:askbeforewshinstall": true,
+    "editor:minimapenabled": true,
+    "web:defaulturl": "https://github.com/PhenixStar/terminolgy",
+    "web:defaultsearch": "https://www.google.com/search?q={query}",
+    "window:tilegapsize": 3,
+    "window:maxtabcachesize": 10,
+    "window:nativetitlebar": true,
+    "window:magnifiedblockopacity": 0.6,
+    "window:magnifiedblocksize": 0.9,
+    "window:magnifiedblockblurprimarypx": 10,
+    "window:fullscreenonlaunch": false,
+    "window:savelastwindow": true,
+    "term:bellsound": false,
+    "term:bellindicator": false,
+    "term:osc52": "always",
+    "term:cursor": "block",
+    "term:cursorblink": false,
+    "term:copyonselect": true,
+    "term:durable": false,
+    "preview:defaultsort": "name",
+    "telemetry:enabled": true
+}
+```
+
+---
+
+## Environment Variable Resolution
+
+Avoid putting secrets in config files with `$ENV:VARNAME` syntax. Works in any string value across all config files.
+
+```json
+{
+  "ai:apitoken": "$ENV:OPENAI_APIKEY",
+  "ai:baseurl": "$ENV:AI_BASEURL:https://api.openai.com/v1"
+}
+```
+
+The format `$ENV:VARNAME:fallback` provides a default when the variable is unset.
+
+---
+
+## Web Bookmarks
+
+Stored in `~/.config/terminolgy/bookmarks.json`. Open bookmarks in the web widget with **Cmd+O**.
+
+```json
+{
+  "bookmark@github": {
+    "url": "https://github.com",
+    "title": "GitHub"
+  },
+  "bookmark@claude": {
+    "url": "https://claude.ai",
+    "title": "Claude AI",
+    "display:order": 1
+  }
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `url` | string | **Required.** Bookmark URL. |
+| `title` | string | Display title. |
+| `iconurl` | string | Custom icon URL (useful for dark mode favicons). |
+| `display:order` | float64 | Sort order — lower appears first. |
+
+---
+
+## Global Hotkey
+
+Set `app:globalhotkey` to open Terminolgy from anywhere. Key names joined with `:`.
+
+```json
+{ "app:globalhotkey": "F5" }
+{ "app:globalhotkey": "Ctrl:Option:e" }
+```
+
+**Supported modifiers:** `Ctrl`, `Cmd`, `Shift`, `Alt`, `Option`, `Meta`, `Super`
+
+**Supported keys:** letters `a`–`z`, `F1`–`F20`, digits `c{Digit0}`–`c{Digit9}`, `Space`, `Enter`, `Tab`, `Backspace`, `Delete`, `Insert`, arrow keys (`ArrowUp/Down/Left/Right`), `Home`, `End`, `PageUp`, `PageDown`, `Esc`, media/volume keys, numpad keys (`c{Numpad0}`–`c{Numpad9}`).

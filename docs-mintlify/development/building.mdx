@@ -4,32 +4,159 @@ description: "Set up a development environment and build Terminolgy from source.
 icon: "hammer"
 ---
 
-{/* TODO: migrate from docs/docs/ — check for building/development docs */}
+These instructions cover setting up dependencies and building Terminolgy from source on macOS, Linux, and Windows.
 
 ## Prerequisites
 
-- Node.js 20+
-- Go 1.22+
-- npm or yarn
+### Platform-Specific Dependencies
 
-## Clone and Install
+<Tabs>
+  <Tab title="macOS">
+    No platform-specific dependencies required.
+  </Tab>
+  <Tab title="Linux">
+    Install `zip` and the [Zig](https://ziglang.org/) compiler (required for statically linking CGO):
+
+    ```bash
+    # Debian / Ubuntu
+    sudo apt install zip snapd
+    sudo snap install zig --classic --beta
+
+    # Fedora / RHEL
+    sudo dnf install zip zig
+
+    # Arch
+    sudo pacman -S zip zig
+    ```
+
+    **For packaging only**, also install: `fpm`, `rpm`, `snapd`, `lxd`, `snapcraft`, `libarchive-tools`, `binutils`, `libopenjp2-tools`, `squashfs-tools`.
+
+    On Linux ARM64, install `fpm` via Gem: `gem install fpm`
+  </Tab>
+  <Tab title="Windows">
+    Install the [Zig](https://ziglang.org/) compiler for statically linking CGO.
+
+    Installation instructions: [ziglang.org/learn/getting-started/#managers](https://ziglang.org/learn/getting-started/#managers)
+  </Tab>
+</Tabs>
+
+### Required Tools
+
+<Steps>
+  <Step title="Install Task">
+    Task is the build system used to coordinate all build steps (a modern Make alternative).
+
+    Download from [taskfile.dev/installation](https://taskfile.dev/installation/).
+  </Step>
+  <Step title="Install Go">
+    Download Go from [go.dev/doc/install](https://go.dev/doc/install) or via your package manager.
+  </Step>
+  <Step title="Install Node.js 22 LTS">
+    Download from [nodejs.org/en/download](https://nodejs.org/en/download).
+
+    Terminolgy uses `npm` — run `npm install` to install Node dependencies.
+  </Step>
+</Steps>
+
+---
+
+## Clone the Repository
 
 ```bash
+# SSH
+git clone git@github.com:PhenixStar/terminolgy.git
+
+# HTTPS
 git clone https://github.com/PhenixStar/terminolgy.git
+
 cd terminolgy
-npm install
 ```
 
-## Development
+---
+
+## Install Dependencies
+
+Run this after cloning, or any time the build breaks:
 
 ```bash
-npm run dev
+task init
 ```
 
-## Production Build
+This loads both Node and Go dependencies.
 
-```bash
-npm run build
+---
+
+## Build and Run
+
+All build commands are defined in `Taskfile.yml`. They automatically install dependencies on first run.
+
+<Tabs>
+  <Tab title="Development (HMR)">
+    Build the app and run it through Vite's development server with Hot Module Reloading:
+
+    ```bash
+    task dev
+    ```
+
+    The app reloads automatically when frontend files change.
+  </Tab>
+  <Tab title="Standalone">
+    Build and run the app without the development server. No auto-reload on change:
+
+    ```bash
+    task start
+    ```
+  </Tab>
+  <Tab title="Packaged Build">
+    Generate a production build and package it for local installation. Artifacts land in `make/`:
+
+    ```bash
+    task package
+    ```
+
+    On Linux ARM64:
+
+    ```bash
+    USE_SYSTEM_FPM=1 task package
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+## Debugging
+
+### Frontend Logs
+
+Open Chrome DevTools inside Terminolgy:
+
+| Platform | Shortcut |
+|----------|----------|
+| macOS | `Cmd+Option+I` |
+| Linux / Windows | `Ctrl+Option+I` |
+
+Logs appear in the Console tab.
+
+### Backend Logs
+
+Development build logs are written to:
+
+```
+~/.terminolgy-dev/waveapp.log
 ```
 
-{/* TODO: add full build instructions once source files reviewed */}
+Both the Electron Node.js backend and the main Go backend log here.
+
+---
+
+## Project Structure
+
+| Directory | Contents |
+|-----------|---------|
+| `cmd/` | Go entry points (main app + tsh CLI) |
+| `pkg/` | Go packages — core logic, config, block system |
+| `frontend/` | React + TypeScript renderer (Vite) |
+| `db/` | SQLite migrations and queries |
+| `docs/` | Docusaurus documentation source |
+| `docs-mintlify/` | Mintlify documentation (this site) |
+| `Taskfile.yml` | All build, test, and packaging tasks |

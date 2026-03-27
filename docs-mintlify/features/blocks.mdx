@@ -4,41 +4,108 @@ description: "Organize your workspace with Terminolgy's flexible block layout sy
 icon: "grid-2"
 ---
 
-{/* TODO: migrate from docs/docs/layout.mdx and docs/docs/tabs.mdx */}
-
-Terminolgy's workspace is built around **blocks** — individual components that can be arranged freely within tabs.
+Every visual element in Terminolgy is a **block**. Blocks are arranged in a tiled flexbox layout inside tabs, and can be freely moved, resized, and magnified.
 
 ## Tabs
 
-Tabs work like browser tabs to organize your work. Each tab has its own independent layout of blocks.
+Tabs are collections of blocks that form a dashboard. Each tab maintains its own independent layout.
+
+### Tab Bar Controls
 
 | Action | Shortcut |
 |--------|----------|
 | New tab | `Cmd+T` |
 | Close tab | `Cmd+Shift+W` |
-| Switch tabs | `Cmd+1-9` |
+| Switch to tab N | `Cmd+1–9` |
+| Switch tab left | `Cmd+[` |
+| Switch tab right | `Cmd+]` |
 
-## Blocks
+- **Create:** Click the `+` button at the right of the tab bar
+- **Close:** Hover over a tab and click the `×` button
+- **Rearrange:** Drag tabs within the tab bar
+- **Pin:** Right-click → Pin Tab (prevents accidental closing)
 
-Each block can be a terminal, web browser, file preview, or other widget. Blocks within a tab form a flexible grid that you can reorganize at will.
+---
 
-### Moving Blocks
+## Block Operations
 
-Drag a block's header to move it. Valid drop zones highlight in green:
-- Over half a block — insert beside it
-- Over an edge — insert at the screen edge
-- Over a full block — swap positions
+### Adding a Block
 
-### Resizing Blocks
+Select a widget type from the right sidebar to add it to the current tab. New blocks are placed automatically starting from the right side, filling rows before wrapping downward.
 
-Hover between two blocks to reveal a green dividing line. Drag it to resize.
+### Deleting a Block
 
-### Block Numbers
+- Click the `×` button in the block's top-right corner
+- Right-click the block header → **Close Block**
+- Run `tsh deleteblock` from any terminal
+- Press `Cmd+W` to close the currently focused block
 
-Hold `Ctrl+Shift` to see block numbers overlaid on each block. Use these numbers with `tsh` to target specific blocks:
+<Warning>
+Deleting a block stops any running processes and discards unsaved work. This cannot be undone.
+</Warning>
 
-```bash
-tsh getmeta -b 2 file
+### Moving a Block
+
+Drag the block header to a new location. Drop zone indicators appear as you drag:
+
+| Drop position | Result |
+|---------------|--------|
+| Left/right quadrant (same tiling direction) | Insert inline before/after |
+| Top/bottom quadrant (opposite direction) | Insert on a new level |
+| Outside edge | Insert at parent level |
+| Center fifth of the block | Swap positions |
+
+All movements except Swap cause the rest of the layout to reflow.
+
+### Resizing a Block
+
+Hover over the margin between two blocks — the cursor changes to a resize arrow and a line appears after 500ms showing which blocks will resize. Drag to resize. Block sizes are unitless ratios, so resizing one block proportionally adjusts its neighbors.
+
+### Magnifying a Block
+
+Click the magnify icon in the block header, or press `Cmd+M`. The block expands to fill most of the window while the rest are dimmed behind it. Press `Cmd+M` again to restore.
+
+Magnify settings in `settings.json`:
+
+```json
+{
+  "window:magnifiedblockopacity": 0.6,
+  "window:magnifiedblocksize": 0.9
+}
 ```
 
-{/* TODO: migrate full layout reference from docs/docs/layout.mdx */}
+---
+
+## Block Numbers
+
+Hold `Ctrl+Shift` to see numbered overlays on every block in the current tab. Block numbers are assigned left-to-right, top-to-bottom and can be used to target specific blocks with `tsh`:
+
+```bash
+# Get metadata for block 2
+tsh getmeta -b 2
+
+# Update the URL of the web widget in block 3
+tsh setmeta -b 3 url=https://github.com
+
+# Close block 4
+tsh deleteblock -b 4
+```
+
+---
+
+## Layout System Internals
+
+The layout is an n-tree of rows and columns (flexbox-style). Each level alternates direction: level 1 tiles as a row, level 2 as a column, level 3 as a row, and so on.
+
+- **Node:** An entry in the layout tree — either a single block (leaf) or an ordered list of child nodes with a tiling direction and a unitless size
+- **Block:** The contents of a leaf node — defines what widget is displayed
+
+New blocks are placed at the last available node in the deepest level, where "available" means fewer than 5 children. There is no hard cap on total blocks per tab, but performance degrades past ~25 blocks.
+
+### Gap Between Blocks
+
+The gap defaults to `3px`. To change it:
+
+```json
+{ "window:tilegapsize": 5 }
+```

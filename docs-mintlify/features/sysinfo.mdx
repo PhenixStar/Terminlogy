@@ -1,27 +1,101 @@
 ---
 title: "System Info"
-description: "Monitor CPU, memory, disk, and network metrics directly in Terminolgy."
+description: "Monitor CPU, memory, disk, GPU, and network metrics directly in Terminolgy."
 icon: "chart-line"
 ---
 
-{/* TODO: migrate from docs/docs/ — check for sysinfo/monitoring related pages */}
-
-Terminolgy includes a built-in system information widget that displays real-time metrics.
+The System Info widget provides real-time monitoring of your machine's performance metrics. It works on both local and remote connections — when tsh is installed on a remote machine, sysinfo reflects that machine's stats.
 
 ## Opening System Info
+
+Click the sysinfo icon in the right sidebar, or run from any terminal:
 
 ```bash
 tsh view sysinfo
 ```
 
-Or click the system info icon in the widget bar.
+To open it in magnified mode:
 
-## Available Metrics
+```bash
+tsh view -m sysinfo
+```
 
-- CPU usage (per core and aggregate)
-- Memory usage
-- Disk I/O
-- Network traffic
-- Process list
+---
 
-{/* TODO: add full content once source file identified */}
+## Available Metric Types
+
+The sysinfo widget displays a configurable set of metric panels. Each panel can be enabled, disabled, or rearranged via the block's header context menu.
+
+### CPU
+
+Displays overall CPU utilization as a line graph plus per-core breakdown. Useful for identifying hot cores and spotting runaway processes.
+
+- **Aggregate %** — total CPU usage across all cores
+- **Per-core bars** — individual core utilization
+- **Load average** — 1m / 5m / 15m averages (Linux/macOS)
+
+### Memory
+
+Shows RAM and swap usage as a stacked bar or dial.
+
+- **Used / Total** — physical RAM consumption
+- **Available** — memory available to new processes
+- **Swap** — swap/page file usage
+
+### Disk
+
+Per-mountpoint disk usage and I/O rates.
+
+- **Usage %** — used vs. total capacity
+- **Read / Write throughput** — bytes/sec (aggregated across active disks)
+
+### Network
+
+Per-interface bandwidth monitoring.
+
+- **Rx / Tx rates** — current receive and transmit throughput
+- **Total transferred** — cumulative since last reset
+- **Interface selector** — choose which interface to monitor
+
+### GPU (Extended)
+
+Terminolgy's sysinfo includes extended GPU monitoring for NVIDIA, AMD, and Apple Silicon GPUs where drivers expose the data.
+
+| Metric | NVIDIA | AMD | Apple M-series |
+|--------|--------|-----|----------------|
+| GPU utilization % | NVML | ROCm | Metal |
+| VRAM used / total | NVML | ROCm | Unified (shared) |
+| GPU temperature | NVML | ROCm | — |
+| Power draw (W) | NVML | ROCm | — |
+| Clock speeds | NVML | — | — |
+
+<Info>
+GPU monitoring requires the vendor driver library to be present on the machine running the sysinfo widget. On remote connections, the library must be installed on the remote machine.
+</Info>
+
+### Dials
+
+Compact circular gauges for a quick at-a-glance overview. Each dial represents a single metric (CPU, memory, or disk usage) as a filled arc.
+
+---
+
+## Remote Sysinfo
+
+When connected to a remote machine via SSH with tsh enabled, sysinfo reflects the **remote** machine's metrics — not the local machine's. This lets you monitor a server's health in a dedicated block without opening a terminal.
+
+```bash
+# Connect to remote and open sysinfo in that block's context
+tsh view sysinfo   # (run from a terminal connected to the remote)
+```
+
+---
+
+## Configuration
+
+Right-click the sysinfo block header to access display options:
+
+- Toggle individual metric panels on/off
+- Change the refresh interval
+- Switch between graph and dial view modes
+
+Sysinfo respects the active connection context — switching the connection on the block switches which machine is monitored.

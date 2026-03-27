@@ -4,20 +4,177 @@ description: "Customize the appearance of Terminolgy with built-in and custom th
 icon: "palette"
 ---
 
-{/* TODO: migrate from docs/docs/customization.mdx */}
+Terminolgy supports per-terminal color themes, custom tab backgrounds, and font customization — all configurable through context menus or config files.
 
-Terminolgy supports light and dark modes, custom themes, and tab background colors.
+## Terminal Themes
 
-## Dark and Light Mode
+Right-click the header of any terminal block to open a context menu. Select **Themes** to apply a built-in or custom theme to that terminal.
 
-Terminolgy respects your system's color scheme preference by default. You can override this in Settings.
+To set the default theme for all new terminals, add `term:theme` to `settings.json`:
 
-## Tab Background Colors
+```json
+{ "term:theme": "default-dark" }
+```
 
-Right-click any tab header to set a background color or gradient for that tab. This helps visually distinguish different workspaces.
+Or use tsh:
 
-## Custom CSS
+```bash
+tsh setconfig term:theme=default-dark
+```
 
-Advanced users can inject custom CSS via the settings file for deeper UI customization.
+### Creating a Custom Theme
 
-{/* TODO: migrate full customization reference from docs/docs/customization.mdx */}
+Terminal themes are defined in `~/.config/terminolgy/termthemes.json`. Open it with:
+
+```bash
+tsh editconfig termthemes.json
+```
+
+Each theme is a JSON key-value object. Example — the built-in `default-dark` theme:
+
+```json
+{
+  "default-dark": {
+    "display:name": "Default Dark",
+    "display:order": 1,
+    "black": "#757575",
+    "red": "#cc685c",
+    "green": "#76c266",
+    "yellow": "#cbca9b",
+    "blue": "#85aacb",
+    "magenta": "#cc72ca",
+    "cyan": "#74a7cb",
+    "white": "#c1c1c1",
+    "brightBlack": "#727272",
+    "brightRed": "#cc9d97",
+    "brightGreen": "#a3dd97",
+    "brightYellow": "#cbcaaa",
+    "brightBlue": "#9ab6cb",
+    "brightMagenta": "#cc8ecb",
+    "brightCyan": "#b7b8cb",
+    "brightWhite": "#f0f0f0",
+    "foreground": "#c1c1c1",
+    "background": "#00000077",
+    "cursorAccent": "",
+    "selectionBackground": ""
+  }
+}
+```
+
+<Info>
+Use `#rrggbbaa` format (with alpha channel) for `background` if you want the terminal to be transparent.
+</Info>
+
+### Theme Color Keys
+
+| Key | ANSI FG | ANSI BG | Description |
+|-----|---------|---------|-------------|
+| `display:name` | — | — | Name shown in the UI context menu |
+| `display:order` | — | — | Sort order in the context menu |
+| `black` | 30 | 40 | ANSI black |
+| `red` | 31 | 41 | ANSI red |
+| `green` | 32 | 42 | ANSI green |
+| `yellow` | 33 | 43 | ANSI yellow |
+| `blue` | 34 | 44 | ANSI blue |
+| `magenta` | 35 | 45 | ANSI magenta |
+| `cyan` | 36 | 46 | ANSI cyan |
+| `white` | 37 | 47 | ANSI white |
+| `brightBlack` | 90 | 100 | Bright black |
+| `brightRed` | 91 | 101 | Bright red |
+| `brightGreen` | 92 | 102 | Bright green |
+| `brightYellow` | 93 | 103 | Bright yellow |
+| `brightBlue` | 94 | 104 | Bright blue |
+| `brightMagenta` | 95 | 105 | Bright magenta |
+| `brightCyan` | 96 | 106 | Bright cyan |
+| `brightWhite` | 97 | 107 | Bright white |
+| `foreground` | — | — | Default text color |
+| `background` | — | — | Background color (use `#rrggbbaa` for transparency) |
+| `cursorAccent` | — | — | Cursor color |
+| `selectionBackground` | — | — | Selected text background |
+
+### Applying a Theme via tsh
+
+```bash
+tsh setmeta this term:theme="default-dark"
+```
+
+---
+
+## Tab Backgrounds
+
+Right-click any tab header to open the background picker. You can choose from built-in presets or set a custom background.
+
+The quickest way to set a background from the terminal is `tsh setbg`:
+
+```bash
+# Image background (50% opacity by default)
+tsh setbg ~/pictures/background.jpg
+
+# Color background
+tsh setbg "#ff0000"        # hex (must quote)
+tsh setbg forestgreen      # CSS color name
+
+# Adjust opacity
+tsh setbg --opacity 0.3 ~/pictures/light-pattern.png
+tsh setbg --opacity 0.7    # change opacity of current background only
+
+# Image positioning
+tsh setbg --tile ~/pictures/texture.png          # tiled pattern
+tsh setbg --center ~/pictures/logo.png           # center without scaling
+tsh setbg --center --size 200px ~/pictures/logo.png
+
+# Remove background
+tsh setbg --clear
+```
+
+Supported image formats: JPEG, PNG, GIF, WebP, SVG.
+
+### Default Tab Background
+
+To apply a background preset to all new tabs automatically, set `tab:background` in `settings.json`:
+
+```json
+{ "tab:background": "bg@ocean-depths" }
+```
+
+Available preset keys are defined in the [default backgrounds.json](https://github.com/PhenixStar/terminolgy/blob/main/pkg/wconfig/defaultconfig/backgrounds.json).
+
+---
+
+## Terminal Font Customization
+
+### Font Size
+
+Right-click a terminal block header → **Font Size** to change it per-block. For a global default:
+
+```json
+{ "term:fontsize": 14 }
+```
+
+### Font Family
+
+Set a globally installed monospace font:
+
+```json
+{ "term:fontfamily": "JetBrains Mono" }
+```
+
+<Warning>
+Using a non-monospace font or a font that is not installed will cause the terminal to look incorrect. Delete the key to revert to the default.
+</Warning>
+
+---
+
+## Widget Sidebar
+
+The right-side widget sidebar is configured via `widgets.json`. Open it with:
+
+```bash
+tsh editconfig widgets.json
+```
+
+To hide the help/tips widgets in the sidebar:
+
+```json
+{ "widget:showhelp": false }
+```

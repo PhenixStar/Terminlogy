@@ -1,31 +1,191 @@
 ---
 title: "Presets"
-description: "Save and restore workspace configurations with presets."
+description: "Save and restore AI configurations and tab backgrounds with presets."
 icon: "floppy-disk"
 ---
 
-{/* TODO: migrate from docs/docs/presets.mdx and docs/docs/ai-presets.mdx */}
+Terminolgy has two preset systems: **AI presets** for saving AI provider configurations, and **background presets** for saving custom tab backgrounds.
 
-Presets let you save a Terminolgy layout — including open widgets, connections, and settings — and restore it later.
-
-## Creating a Preset
-
-1. Set up your workspace as desired
-2. Go to **File → Save Preset** or run:
-
-```bash
-tsh preset save my-dev-setup
-```
-
-## Restoring a Preset
-
-```bash
-tsh preset load my-dev-setup
-```
+---
 
 ## AI Presets
 
-AI presets let you save combinations of AI model, system prompt, and widget context settings for different workflows.
+AI presets let you define multiple AI provider configurations and switch between them from the Terminolgy AI block header dropdown.
 
-{/* TODO: migrate full presets reference from docs/docs/presets.mdx */}
-{/* TODO: migrate AI presets from docs/docs/ai-presets.mdx */}
+### Preset File Location
+
+```bash
+tsh editconfig presets/ai.json
+```
+
+File path: `~/.config/terminolgy/presets/ai.json`
+
+### Preset Structure
+
+Each preset key starts with `ai@` by convention:
+
+```json
+{
+  "ai@claude-sonnet": {
+    "display:name": "Claude 3 Sonnet",
+    "display:order": 1,
+    "ai:*": true,
+    "ai:apitype": "anthropic",
+    "ai:model": "claude-3-5-sonnet-latest",
+    "ai:apitoken": "<your anthropic API key>"
+  }
+}
+```
+
+Set a preset as default via `settings.json` or tsh:
+
+```bash
+tsh setconfig ai:preset=ai@claude-sonnet
+```
+
+### Provider Examples
+
+<Tabs>
+  <Tab title="Anthropic (Claude)">
+    ```json
+    {
+      "ai@claude-sonnet": {
+        "display:name": "Claude 3 Sonnet",
+        "display:order": 1,
+        "ai:*": true,
+        "ai:apitype": "anthropic",
+        "ai:model": "claude-3-5-sonnet-latest",
+        "ai:apitoken": "<your anthropic API key>"
+      }
+    }
+    ```
+  </Tab>
+  <Tab title="OpenAI">
+    ```json
+    {
+      "ai@openai-gpt41": {
+        "display:name": "GPT-4.1",
+        "display:order": 2,
+        "ai:*": true,
+        "ai:model": "gpt-4.1",
+        "ai:apitoken": "<your OpenAI API key>"
+      }
+    }
+    ```
+  </Tab>
+  <Tab title="Ollama (Local)">
+    ```json
+    {
+      "ai@ollama-llama": {
+        "display:name": "Ollama – Llama2",
+        "display:order": 3,
+        "ai:*": true,
+        "ai:baseurl": "http://localhost:11434/v1",
+        "ai:name": "llama2",
+        "ai:model": "llama2",
+        "ai:apitoken": "ollama"
+      }
+    }
+    ```
+    `ai:apitoken` is required but ignored by Ollama — any value works.
+  </Tab>
+  <Tab title="Azure OpenAI">
+    ```json
+    {
+      "ai@azure-gpt4": {
+        "display:name": "Azure GPT-4",
+        "display:order": 4,
+        "ai:*": true,
+        "ai:apitype": "azure",
+        "ai:baseurl": "<your Azure AI base URL>",
+        "ai:model": "<deployment name>",
+        "ai:apitoken": "<your Azure API key>"
+      }
+    }
+    ```
+    Do not include query parameters or `api-version` in `ai:baseurl`.
+  </Tab>
+  <Tab title="Google Gemini">
+    ```json
+    {
+      "ai@gemini-2.0": {
+        "display:name": "Gemini 2.0",
+        "display:order": 5,
+        "ai:*": true,
+        "ai:apitype": "google",
+        "ai:model": "gemini-2.0-flash-exp",
+        "ai:apitoken": "<your Google AI API key>"
+      }
+    }
+    ```
+  </Tab>
+  <Tab title="Perplexity">
+    ```json
+    {
+      "ai@perplexity-sonar": {
+        "display:name": "Perplexity Sonar",
+        "display:order": 6,
+        "ai:*": true,
+        "ai:apitype": "perplexity",
+        "ai:model": "llama-3.1-sonar-small-128k-online",
+        "ai:apitoken": "<your perplexity API key>"
+      }
+    }
+    ```
+  </Tab>
+  <Tab title="OpenRouter">
+    ```json
+    {
+      "ai@openrouter": {
+        "display:name": "OpenRouter",
+        "display:order": 7,
+        "ai:*": true,
+        "ai:baseurl": "https://openrouter.ai/api/v1",
+        "ai:model": "qwen/qwen3-next-80b",
+        "ai:apitoken": "<openrouter-key>"
+      }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+### Using a Proxy
+
+Add `ai:proxyurl` to any preset to route AI requests through an HTTP proxy:
+
+```json
+{
+  "ai@claude-via-proxy": {
+    "display:name": "Claude (via Proxy)",
+    "ai:*": true,
+    "ai:apitype": "anthropic",
+    "ai:model": "claude-3-5-sonnet-latest",
+    "ai:apitoken": "<key>",
+    "ai:proxyurl": "http://proxy.example.com:8080"
+  }
+}
+```
+
+---
+
+## Background Presets
+
+Custom tab backgrounds can be saved as reusable presets in `~/.config/terminolgy/backgrounds.json`.
+
+```bash
+tsh editconfig backgrounds.json
+```
+
+Preset keys start with `bg@` by convention. Apply a preset to the current tab:
+
+```bash
+tsh setbg bg@ocean-depths
+```
+
+Set a preset as the default for all new tabs in `settings.json`:
+
+```json
+{ "tab:background": "bg@ocean-depths" }
+```
+
+Built-in background presets are defined in the [default backgrounds.json](https://github.com/PhenixStar/terminolgy/blob/main/pkg/wconfig/defaultconfig/backgrounds.json).

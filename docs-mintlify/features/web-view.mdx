@@ -4,28 +4,104 @@ description: "Browse the web directly inside Terminolgy without leaving your ter
 icon: "globe"
 ---
 
-{/* TODO: migrate from docs/docs/ — check for web view related content */}
+Terminolgy's web view widget embeds a full Chromium browser inside any block. Browse documentation, localhost apps, dashboards, and external sites without leaving your workflow.
 
-Terminolgy's web view widget lets you browse web pages and documentation without leaving your terminal.
-
-## Opening a Web Page
+## Opening a Web View
 
 ```bash
 # Open a URL in a new web block
 tsh web open https://github.com
 
-# Search the web
-tsh web open "terminolgy documentation"
-
-# Open localhost
+# Open localhost (e.g. a dev server)
 tsh web open http://localhost:3000
+
+# Do a web search (opens default search engine)
+tsh web open "terminolgy documentation"
 ```
 
-## Features
+Or click the globe icon in the right sidebar to open a new web block at the default URL.
 
-- Full browser rendering (Chromium-based)
-- Navigate with back/forward buttons or keyboard shortcuts
-- AI can capture screenshots of web widgets for analysis (with Widget Context enabled)
-- Terminolgy AI can navigate web widgets programmatically
+---
 
-{/* TODO: add full content once source files reviewed */}
+## Navigation
+
+The web block header contains standard browser controls:
+
+| Control | Action |
+|---------|--------|
+| Back / Forward buttons | Navigate browser history |
+| Address bar | Type or paste a URL |
+| Reload | Refresh the current page |
+| `Cmd+L` | Focus the address bar |
+
+---
+
+## Configuration
+
+### Default URL and Search Engine
+
+Set the page shown when opening a new web block with no URL, and the search engine used when typing a non-URL query:
+
+```json
+{
+  "web:defaulturl": "https://github.com",
+  "web:defaultsearch": "https://www.google.com/search?q={query}"
+}
+```
+
+`{query}` is replaced by the search term automatically.
+
+### Open Links Externally
+
+By default, links open inside Terminolgy's web widget. To force external browser:
+
+```json
+{ "web:openlinksinternally": false }
+```
+
+---
+
+## Web Bookmarks
+
+Bookmarks are accessible in any web block with `Cmd+O`. They are stored in `~/.config/terminolgy/bookmarks.json`:
+
+```json
+{
+  "bookmark@docs": {
+    "url": "https://docs.terminolgy.io",
+    "title": "Terminolgy Docs"
+  },
+  "bookmark@localhost": {
+    "url": "http://localhost:3000",
+    "title": "Dev Server",
+    "display:order": 1
+  }
+}
+```
+
+---
+
+## AI Integration
+
+Terminolgy AI can interact with web blocks when **Widget Context** is enabled. This allows the AI to:
+
+- Capture screenshots of the current web page for analysis
+- Navigate web blocks programmatically (scroll, click, fill forms)
+- Read page content to answer questions in context
+
+To use this, open Terminolgy AI and enable the **Widget Context** toggle, then click on the web block you want the AI to use as context.
+
+---
+
+## Using a Web Block from the CLI
+
+```bash
+# Point an existing web block (block 2) to a new URL
+tsh setmeta -b 2 url=https://docs.terminolgy.io
+
+# Read the current URL from a web block
+tsh getmeta -b 2 url
+
+# Reload the current page in block 2
+tsh web reload -b 2
+```

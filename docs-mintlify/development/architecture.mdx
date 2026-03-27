@@ -4,21 +4,99 @@ description: "Overview of Terminolgy's technical architecture."
 icon: "sitemap"
 ---
 
-{/* TODO: add architecture documentation */}
+Terminolgy is a desktop application built on Electron, with a Go backend handling terminal sessions, block state, and connections. The frontend is React + TypeScript rendered in Chromium.
 
-Terminolgy is built with:
+## Technology Stack
 
-- **Frontend**: React + TypeScript (Electron renderer)
-- **Backend**: Go (core terminal, block management, connections)
-- **IPC**: Custom block protocol over WebSocket
-- **Editor**: Monaco (VS Code's editor component)
-- **Renderer**: Chromium (via Electron) for web views and UI
+| Layer | Technology |
+|-------|-----------|
+| Desktop shell | Electron |
+| UI renderer | React 19 + TypeScript |
+| Build tooling | Vite + esbuild |
+| Core backend | Go |
+| Editor | Monaco (VS Code's editor component) |
+| Terminal renderer | xterm.js with WebGL |
+| Database | SQLite (via `db/` migrations) |
+| Build system | Task (taskfile.dev) |
 
-## Key Components
+---
 
-- **Block system**: Every widget is a block with isolated state, addressable by ID or number
-- **tsh protocol**: Unix socket-based IPC between shell sessions and the GUI layer
-- **Connection manager**: SSH tunneling and WSL integration
-- **AI bridge**: Proxies AI requests through the Terminolgy Cloud service or directly to BYOK providers
+## Core Concepts
 
-{/* TODO: expand with detailed architecture diagrams once source reviewed */}
+### Block System
+
+Every visual element in Terminolgy is a **block** — a self-contained widget with isolated state, addressable by UUID or block number. The layout system arranges blocks in an n-tree of alternating row/column nodes, implementing a CSS Flexbox model.
+
+Blocks communicate with the backend through a typed metadata system. Any string key-value pair can be attached to a block and read or written from the CLI via `tsh getmeta` / `tsh setmeta`.
+
+### tsh Protocol
+
+`tsh` is a Go binary injected into terminal sessions (local and remote). It communicates with the Terminolgy GUI layer via a Unix domain socket. This bridge is what enables:
+
+- Opening graphical widgets from shell commands (`tsh view`, `tsh web open`)
+- Bidirectional file access between local and remote machines (`tsh://local/~/`)
+- Piping terminal output directly to AI context (`tsh ai -`)
+- Persistent variables across sessions (`tsh setvar` / `tsh getvar`)
+
+### Connection Manager
+
+The connection manager handles SSH tunneling and WSL integration. For each SSH connection, Terminolgy:
+
+1. Establishes an SSH session using Go's `crypto/ssh` library
+2. Optionally installs tsh on the remote via SCP
+3. Opens a multiplexed channel over the same connection for tsh IPC
+4. Injects environment variables and runs initialization scripts
+
+### Terminolgy AI Bridge
+
+The AI bridge proxies requests to AI providers. It supports:
+
+- **BYOK (Bring Your Own Key):** direct requests to OpenAI, Anthropic, Google, Azure, Perplexity, Ollama, and any OpenAI-compatible endpoint
+- **Widget context:** attaches terminal output, file contents, screenshots, and sysinfo data to AI requests when Widget Context is enabled
+
+---
+
+## Process Architecture
+
+```
+┌─────────────────────────────────────────────┐
+│                   Electron                   │
+│  ┌─────────────┐     ┌─────────────────────┐ │
+│  │ Main Process│     │  Renderer Process   │ │
+│  │  (Node.js)  │◄───►│  React + TypeScript │ │
+│  └──────┬──────┘     └──────────┬──────────┘ │
+│         │                       │             │
+│         ▼                       ▼             │
+│  ┌─────────────┐     ┌─────────────────────┐ │
+│  │  Go Backend │◄───►│   xterm.js / Monaco │ │
+│  │  (waveapp)  │     │   (terminal/editor) │ │
+│  └──────┬──────┘     └─────────────────────┘ │
+└─────────│───────────────────────────────────-┘
+          │
+          ▼
+   ┌──────────────┐
+   │   SQLite DB  │  (block state, workspace, history)
+   └──────────────┘
+          │
+          ▼
+   ┌──────────────┐    ┌─────────────────────┐
+   │ SSH / WSL    │───►│  Remote machine     │
+   │ connections  │    │  tsh binary (IPC)   │
+   └──────────────┘    └─────────────────────┘
+```
+
+---
+
+## Key Directories
+
+| Path | Description |
+|------|-------------|
+| `cmd/waveterm/` | Go main entry point |
+| `cmd/wsh/` | tsh CLI entry point |
+| `pkg/wcore/` | Block system, tab/workspace management |
+| `pkg/wconfig/` | Config file parsing and defaults |
+| `pkg/wshrpc/` | tsh IPC protocol definitions |
+| `pkg/remote/` | SSH and WSL connection management |
+| `frontend/app/` | React application root |
+| `frontend/components/` | UI components (blocks, layout, widgets) |
+| `db/migrations/` | SQLite schema migrations |

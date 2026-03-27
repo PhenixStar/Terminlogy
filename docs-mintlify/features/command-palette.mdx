@@ -4,20 +4,78 @@ description: "Quickly access any Terminolgy feature or command from the keyboard
 icon: "magnifying-glass"
 ---
 
-{/* TODO: research source file — may be in docs/docs/ or a feature not yet documented */}
-
-The command palette gives you instant keyboard access to any Terminolgy feature.
+The Command Palette gives you instant keyboard-driven access to Terminolgy's features, blocks, connections, and settings without touching the mouse.
 
 ## Opening the Command Palette
 
-Press `Cmd+P` (macOS) or `Ctrl+P` (Windows/Linux).
+<Tabs>
+  <Tab title="macOS">
+    `Ctrl+Shift+P`
+  </Tab>
+  <Tab title="Windows / Linux">
+    `Ctrl+Shift+P`
+  </Tab>
+</Tabs>
+
+---
 
 ## What You Can Do
 
-- Open new widgets
-- Switch between tabs and workspaces
-- Run tsh commands
-- Access settings
-- Search documentation
+The palette uses fuzzy search across all available actions. Start typing to narrow results.
 
-{/* TODO: add full content once source confirmed */}
+<CardGroup cols={2}>
+  <Card title="Open Widgets" icon="plus">
+    Quickly add a terminal, web view, file preview, AI chat, or sysinfo block to the current tab.
+  </Card>
+  <Card title="Navigate Blocks" icon="arrow-right-arrow-left">
+    Jump to any open block by number or name. Equivalent to holding Ctrl+Shift and clicking a block number.
+  </Card>
+  <Card title="Switch Workspaces & Tabs" icon="briefcase">
+    Switch to any saved workspace or tab without opening the Workspace Switcher.
+  </Card>
+  <Card title="Run tsh Commands" icon="terminal">
+    Execute `tsh` commands directly from the palette — type `tsh` followed by a command name to see available options.
+  </Card>
+  <Card title="Open Connections" icon="network-wired">
+    Connect to any SSH or WSL connection saved in your `connections.json`.
+  </Card>
+  <Card title="Edit Config Files" icon="gear">
+    Open `settings.json`, `termthemes.json`, `connections.json`, or any other config file in the built-in editor.
+  </Card>
+</CardGroup>
+
+---
+
+## Command Prefixes
+
+Prefix your query to filter results to a specific category:
+
+| Prefix | Filters to |
+|--------|-----------|
+| `>` | tsh commands (e.g. `> setbg`, `> editconfig`) |
+| `@` | Block navigation by name or number |
+| `#` | Workspaces and tabs |
+| (no prefix) | All categories — fuzzy match |
+
+---
+
+## Examples
+
+```
+view sysinfo          → Opens the System Info widget
+> editconfig          → Opens settings.json in the editor
+@3                    → Focuses block number 3
+# staging             → Switches to the "staging" workspace
+ssh deploy@prod       → Connects to deploy@prod in the current block
+```
+
+---
+
+## Keyboard Navigation
+
+| Key | Action |
+|-----|--------|
+| `↑` / `↓` | Navigate results |
+| `Enter` | Execute selected action |
+| `Esc` | Close palette without action |
+| `Tab` | Autocomplete selected item |
