@@ -1,86 +1,46 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <!-- Cyan gradient for primary nodes -->
-    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#06b6d4"/>
-      <stop offset="100%" stop-color="#22d3ee"/>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a855f7"/>
+      <stop offset="50%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#6d28d9"/>
     </linearGradient>
-    <!-- Purple gradient for secondary nodes -->
-    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#8b5cf6"/>
-      <stop offset="100%" stop-color="#a78bfa"/>
+    <linearGradient id="grad2" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#c084fc"/>
     </linearGradient>
-    <!-- Glow filter -->
-    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="8" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-    <!-- Subtle shadow -->
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-color="#000000" flood-opacity="0.4"/>
+    <linearGradient id="shimmer" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.12"/>
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.06"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
   </defs>
 
-  <!-- Background -->
-  <rect width="512" height="512" rx="96" fill="#0a0a12"/>
+  <!-- Background: deep black, superellipse corners (Hyper-style) -->
+  <rect width="512" height="512" rx="112" fill="#0c0c0c"/>
+  <rect x="3" y="3" width="506" height="506" rx="110" fill="none" stroke="#1e1035" stroke-width="1.5"/>
 
-  <!-- Hexagonal frame (subtle) -->
-  <path d="M256 60 L410 140 L410 372 L256 452 L102 372 L102 140 Z"
-        fill="none" stroke="#1a1a2e" stroke-width="2"/>
+  <!-- Stylized T: terminal prompt meets typography -->
+  <!-- Top bar (title bar aesthetic) -->
+  <rect x="116" y="132" width="280" height="44" rx="6" fill="url(#grad1)"/>
+  <rect x="116" y="132" width="280" height="44" rx="6" fill="url(#shimmer)"/>
 
-  <!-- Neural network connections (cyan lines) -->
-  <g stroke="#06b6d4" stroke-width="2" stroke-opacity="0.4">
-    <line x1="256" y1="140" x2="180" y2="200"/>
-    <line x1="256" y1="140" x2="332" y2="200"/>
-    <line x1="180" y1="200" x2="140" y2="290"/>
-    <line x1="180" y1="200" x2="220" y2="290"/>
-    <line x1="332" y1="200" x2="292" y2="290"/>
-    <line x1="332" y1="200" x2="372" y2="290"/>
-    <line x1="140" y1="290" x2="256" y2="340"/>
-    <line x1="220" y1="290" x2="256" y2="340"/>
-    <line x1="292" y1="290" x2="256" y2="340"/>
-    <line x1="372" y1="290" x2="256" y2="340"/>
-    <!-- Downward connections to cursor -->
-    <line x1="256" y1="340" x2="256" y2="420"/>
-  </g>
+  <!-- Vertical stem -->
+  <rect x="228" y="176" width="56" height="204" rx="6" fill="url(#grad1)"/>
+  <rect x="228" y="176" width="56" height="204" rx="6" fill="url(#shimmer)"/>
 
-  <!-- Terminal cursor (stylized, main element) -->
-  <g filter="url(#shadow)">
-    <rect x="236" y="160" width="40" height="260" rx="4" fill="url(#cyanGrad)"/>
-    <rect x="240" y="164" width="32" height="252" rx="2" fill="#0a0a12" fill-opacity="0.3"/>
-  </g>
+  <!-- Blinking cursor (purple glow) -->
+  <rect x="236" y="388" width="40" height="10" rx="3" fill="#c084fc" filter="url(#glow)"/>
 
-  <!-- Cursor blink overlay (thin highlight) -->
-  <rect x="244" y="168" width="8" height="80" rx="2" fill="#ffffff" fill-opacity="0.15"/>
+  <!-- Prompt chevron > (Warp-style accent) -->
+  <path d="M140 260 L172 288 L140 316" fill="none" stroke="url(#grad2)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
 
-  <!-- Neural nodes at connection points -->
-  <g filter="url(#glow)">
-    <!-- Top tier -->
-    <circle cx="256" cy="140" r="16" fill="url(#cyanGrad)"/>
-    <circle cx="180" cy="200" r="12" fill="url(#purpleGrad)"/>
-    <circle cx="332" cy="200" r="12" fill="url(#purpleGrad)"/>
-    <!-- Middle tier -->
-    <circle cx="140" cy="290" r="10" fill="url(#cyanGrad)" fill-opacity="0.7"/>
-    <circle cx="220" cy="290" r="10" fill="url(#cyanGrad)" fill-opacity="0.7"/>
-    <circle cx="292" cy="290" r="10" fill="url(#cyanGrad)" fill-opacity="0.7"/>
-    <circle cx="372" cy="290" r="10" fill="url(#cyanGrad)" fill-opacity="0.7"/>
-    <!-- Junction -->
-    <circle cx="256" cy="340" r="18" fill="url(#purpleGrad)"/>
-    <!-- Bottom node -->
-    <circle cx="256" cy="420" r="14" fill="url(#cyanGrad)"/>
-  </g>
-
-  <!-- Accent sparkles (green hints) -->
-  <g fill="#10b981" opacity="0.6">
-    <circle cx="380" cy="120" r="4"/>
-    <circle cx="400" cy="150" r="3"/>
-    <circle cx="130" cy="380" r="3"/>
-    <circle cx="110" cy="350" r="4"/>
-  </g>
-
-  <!-- Subtle inner highlight on cursor -->
-  <rect x="244" y="172" width="4" height="60" rx="2" fill="#ffffff" fill-opacity="0.25"/>
+  <!-- Terminal dots (dimmed, top area) -->
+  <circle cx="156" cy="100" r="7" fill="#262626"/>
+  <circle cx="182" cy="100" r="7" fill="#262626"/>
+  <circle cx="208" cy="100" r="7" fill="#262626"/>
 </svg>
