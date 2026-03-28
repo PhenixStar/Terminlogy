@@ -506,7 +506,22 @@ export class WaveAIModel {
         const uiMessageParts: WaveUIMessagePart[] = [];
 
         if (input.trim()) {
-            aiMessageParts.push({ type: "text", text: input.trim() });
+            let messageText = input.trim();
+            // cross-block AI context: prepend visible terminal output when widgetaccess is on
+            const widgetAccess = globalStore.get(this.widgetAccessAtom);
+            if (widgetAccess && !this.inBuilder) {
+                try {
+                    const [, tabId] = WOS.splitORef(this.orefContext);
+                    const { gatherVisibleBlockContext } = await import("./cross-block-context");
+                    const blockCtx = await gatherVisibleBlockContext(tabId);
+                    if (blockCtx) {
+                        messageText = `${blockCtx}\n\nUser question: ${messageText}`;
+                    }
+                } catch (_) {
+                    // non-fatal: proceed without context
+                }
+            }
+            aiMessageParts.push({ type: "text", text: messageText });
             uiMessageParts.push({ type: "text", text: input.trim() });
         }
 

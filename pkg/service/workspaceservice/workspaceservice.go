@@ -6,6 +6,7 @@ package workspaceservice
 import (
 	"context"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/wavetermdev/waveterm/pkg/blockcontroller"
@@ -194,6 +195,21 @@ func (svc *WorkspaceService) SetActiveTab(workspaceId string, tabId string) (wav
 			panichandler.PanicHandler("WorkspaceService:SetActiveTab:SendUpdateEvents", recover())
 		}()
 		wps.Broker.SendUpdateEvents(updates)
+	}()
+	// session restore: resync controllers for all blocks in the newly-active tab
+	// this auto-restarts dead local shells and reconnects SSH blocks
+	go func() {
+		defer func() {
+			panichandler.PanicHandler("WorkspaceService:SetActiveTab:ResyncControllers", recover())
+		}()
+		resyncCtx, cancelResync := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancelResync()
+		for _, oref := range blockORefs {
+			blockErr := blockcontroller.ResyncController(resyncCtx, tabId, oref.OID, nil, false)
+			if blockErr != nil {
+				log.Printf("SetActiveTab: ResyncController failed for block %s: %v\n", oref.OID, blockErr)
+			}
+		}
 	}()
 	var extraUpdates waveobj.UpdatesRtnType
 	extraUpdates = append(extraUpdates, updates...)
