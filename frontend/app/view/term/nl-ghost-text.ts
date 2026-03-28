@@ -196,6 +196,7 @@ export class NlGhostText {
             globalStore.set(this.stateAtom, { visible: true, command: cleaned, loading: false, query });
         } catch (e) {
             if (ctrl.signal.aborted) return;
+            console.warn("[NlGhostText] AI fetch failed:", e);
             globalStore.set(this.stateAtom, { visible: false, command: "", loading: false, query });
         }
     }

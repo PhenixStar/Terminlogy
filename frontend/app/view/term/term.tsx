@@ -194,10 +194,9 @@ const TerminalView = ({ blockId, model }: ViewComponentProps<TermViewModel>) => 
         () => jotai.atom<GhostTextState>({ visible: false, command: "", loading: false, query: "" }),
         []
     );
-    const nlGhostRef = React.useRef<NlGhostText | null>(null);
-    if (nlGhostRef.current == null) {
-        nlGhostRef.current = new NlGhostText(ghostStateAtom);
-    }
+    // useMemo guarantees one instance per component lifetime (no side effect in render body)
+    const nlGhostInst = React.useMemo(() => new NlGhostText(ghostStateAtom), []);
+    const nlGhostRef = React.useRef<NlGhostText>(nlGhostInst);
     let termMode = blockData?.meta?.["term:mode"] ?? "term";
     if (termMode != "term" && termMode != "vdom") {
         termMode = "term";
@@ -363,7 +362,9 @@ const TerminalView = ({ blockId, model }: ViewComponentProps<TermViewModel>) => 
         const rszObs = new ResizeObserver(() => {
             termWrap.handleResize_debounced();
         });
-        rszObs.observe(connectElemRef.current);
+        if (connectElemRef.current) {
+            rszObs.observe(connectElemRef.current);
+        }
         termWrap.onSearchResultsDidChange = (results) => {
             globalStore.set(searchProps.resultsIndex, results.resultIndex);
             globalStore.set(searchProps.resultsCount, results.resultCount);

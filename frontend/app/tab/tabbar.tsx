@@ -487,8 +487,8 @@ const TabBar = memo(({ workspace, noTabs }: TabBarProps) => {
         const draggingTab = tabIds[tabIndex];
         const tabWidth = tabWidthRef.current;
         const finalLeftPosition = tabIndex * tabWidth;
-        const ref = tabRefs.current.find((ref) => ref.current.dataset.tabId === draggingTab);
-        if (ref.current) {
+        const ref = tabRefs.current.find((ref) => ref.current?.dataset.tabId === draggingTab);
+        if (ref?.current) {
             ref.current.classList.add("animate");
             ref.current.style.transform = `translate3d(${finalLeftPosition}px,0,0)`;
         }
@@ -498,8 +498,10 @@ const TabBar = memo(({ workspace, noTabs }: TabBarProps) => {
         } else {
             // Reset styles
             tabRefs.current.forEach((ref) => {
-                ref.current.style.zIndex = "0";
-                ref.current.classList.remove("animate");
+                if (ref.current) {
+                    ref.current.style.zIndex = "0";
+                    ref.current.classList.remove("animate");
+                }
             });
             // Reset dragging state
             setDraggingTab(null);
