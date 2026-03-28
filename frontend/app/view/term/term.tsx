@@ -22,6 +22,8 @@ import debug from "debug";
 import * as jotai from "jotai";
 import * as React from "react";
 import { AiErrorBanner } from "./ai-error-banner";
+import { NlGhostOverlay } from "./nl-ghost-overlay";
+import { NlGhostText, type GhostTextState } from "./nl-ghost-text";
 import { TermLinkTooltip } from "./term-tooltip";
 import { TermStickers } from "./termsticker";
 import { TermThemeUpdater } from "./termtheme";
@@ -186,6 +188,16 @@ const TerminalView = ({ blockId, model }: ViewComponentProps<TermViewModel>) => 
     const [blockData] = WOS.useWaveObjectValue<Block>(WOS.makeORef("block", blockId));
     const termSettingsAtom = getSettingsPrefixAtom("term");
     const termSettings = jotai.useAtomValue(termSettingsAtom);
+
+    // NL ghost text — stable atom + manager instance for this terminal block
+    const ghostStateAtom = React.useMemo(
+        () => jotai.atom<GhostTextState>({ visible: false, command: "", loading: false, query: "" }),
+        []
+    );
+    const nlGhostRef = React.useRef<NlGhostText | null>(null);
+    if (nlGhostRef.current == null) {
+        nlGhostRef.current = new NlGhostText(ghostStateAtom);
+    }
     let termMode = blockData?.meta?.["term:mode"] ?? "term";
     if (termMode != "term" && termMode != "vdom") {
         termMode = "term";
@@ -315,7 +327,29 @@ const TerminalView = ({ blockId, model }: ViewComponentProps<TermViewModel>) => 
                 overviewRuler: { width: 6 },
             },
             {
-                keydownHandler: model.handleTerminalKeydown.bind(model),
+                keydownHandler: (event: KeyboardEvent): boolean => {
+                    const ghost = nlGhostRef.current;
+                    if (ghost) {
+                        if (event.key === "Tab") {
+                            const accepted = ghost.accept((command, inputBuffer) => {
+                                // Replace the NL query with the AI command:
+                                // Send Ctrl-A to jump to beginning, Ctrl-K to clear line, then type the command
+                                model.sendDataToController("\x01\x0b" + command);
+                            });
+                            if (accepted) {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                return false;
+                            }
+                        } else if (event.key === "Escape") {
+                            const dismissed = ghost.dismiss();
+                            if (dismissed) {
+                                // Don't preventDefault — let Escape still propagate to shell
+                            }
+                        }
+                    }
+                    return model.handleTerminalKeydown(event);
+                },
                 useWebGl: !termSettings?.["term:disablewebgl"],
                 sendDataHandler: model.sendDataToController.bind(model),
                 nodeModel: model.nodeModel,
@@ -327,6 +361,7 @@ const TerminalView = ({ blockId, model }: ViewComponentProps<TermViewModel>) => 
         (window as any).term = termWrap;
         model.termRef.current = termWrap;
         setTermWrapInst(termWrap);
+        nlGhostRef.current?.attach(termWrap);
         const rszObs = new ResizeObserver(() => {
             termWrap.handleResize_debounced();
         });
@@ -342,6 +377,7 @@ const TerminalView = ({ blockId, model }: ViewComponentProps<TermViewModel>) => 
             }, 10);
         }
         return () => {
+            nlGhostRef.current?.detach();
             termWrap.dispose();
             rszObs.disconnect();
             setTermWrapInst(null);
@@ -398,6 +434,9 @@ const TerminalView = ({ blockId, model }: ViewComponentProps<TermViewModel>) => 
             <TermToolbarVDomNode key="vdom-toolbar" blockId={blockId} model={model} />
             <TermVDomNode key="vdom" blockId={blockId} model={model} />
             <div key="connect-elem" className="term-connectelem" ref={connectElemRef} />
+            <NullErrorBoundary debugName="NlGhostOverlay">
+                <NlGhostOverlay stateAtom={ghostStateAtom} />
+            </NullErrorBoundary>
             <NullErrorBoundary debugName="TermLinkTooltip">
                 <TermLinkTooltip termWrap={termWrapInst} />
             </NullErrorBoundary>

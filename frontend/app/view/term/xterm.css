@@ -395,3 +395,53 @@
     height: 100% !important;
     outline: 1px solid rgba(168, 85, 247, 0.3);
 }
+
+/* NL-to-command ghost text overlay */
+.nl-ghost-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 12;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 10px;
+    height: 24px;
+    background: rgba(30, 20, 50, 0.92);
+    border-top: 1px solid rgba(168, 85, 247, 0.35);
+    font-size: 12px;
+    font-family: inherit;
+    pointer-events: none;
+}
+
+.nl-ghost-icon {
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(168, 85, 247, 0.9);
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+}
+
+.nl-ghost-loading {
+    color: rgba(168, 85, 247, 0.6);
+    font-style: italic;
+    font-size: 11px;
+}
+
+.nl-ghost-command {
+    color: rgba(200, 200, 200, 0.75);
+    font-style: italic;
+    font-family: monospace;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.nl-ghost-hint {
+    font-size: 10px;
+    color: rgba(140, 140, 140, 0.55);
+    flex-shrink: 0;
+    white-space: nowrap;
+}

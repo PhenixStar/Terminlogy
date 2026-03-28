@@ -1425,6 +1425,7 @@ declare global {
         "term:osc52"?: string;
         "term:durable"?: boolean;
         "term:aierroranalysis"?: boolean;
+        "term:nlcommand"?: boolean;
         "term:closeonlasttermclose"?: boolean;
         "editor:minimapenabled"?: boolean;
         "editor:stickyscrollenabled"?: boolean;

@@ -111,6 +111,7 @@ type SettingsType struct {
 	TermOsc52               string   `json:"term:osc52,omitempty" jsonschema:"enum=focus,enum=always"`
 	TermDurable             *bool    `json:"term:durable,omitempty"`
 	TermAiErrorAnalysis     *bool    `json:"term:aierroranalysis,omitempty"`
+	TermNlCommand           *bool    `json:"term:nlcommand,omitempty"`
 	TermCloseOnLastTermClose bool    `json:"term:closeonlasttermclose,omitempty"`
 
 	EditorMinimapEnabled      bool    `json:"editor:minimapenabled,omitempty"`
