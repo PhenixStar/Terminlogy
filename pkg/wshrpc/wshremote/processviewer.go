@@ -89,16 +89,28 @@ func (s *procCacheState) requestAndWait(ctx context.Context) (*wshrpc.ProcessLis
 }
 
 func (s *procCacheState) runLoop(firstReadyCh chan struct{}) {
+	firstDone := false
 	defer func() {
 		panichandler.PanicHandler("procCache.runLoop", recover())
+		// Always clean up running state so future requests can restart the goroutine.
+		s.lock.Lock()
+		if !firstDone {
+			// Panic before first result: close channel so waiters unblock and get the
+			// "process list unavailable" error path via the nil cached check.
+			close(firstReadyCh)
+			s.ready = nil
+		}
+		s.running = false
+		s.lastCPUSamples = nil
+		s.lastCPUEpoch = 0
+		s.uidCache = nil
+		s.lock.Unlock()
 	}()
 
 	numCPU := runtime.NumCPU()
 	if numCPU < 1 {
 		numCPU = 1
 	}
-
-	firstDone := false
 
 	for {
 		iterStart := time.Now()
