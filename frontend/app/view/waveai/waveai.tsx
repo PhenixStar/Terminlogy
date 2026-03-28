@@ -9,7 +9,7 @@ import { useCallback } from "react";
 export class WaveAiModel implements ViewModel {
     viewType = "waveai";
     viewIcon = atom("sparkles");
-    viewName = atom("Wave AI");
+    viewName = atom("Terminolgy AI");
     noPadding = atom(true);
     viewComponent = WaveAiDeprecatedView;
 

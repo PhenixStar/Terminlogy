@@ -377,7 +377,7 @@ func (jm *JobManager) StartStream(msc *MainServerConn) error {
 }
 
 func MakeJobDomainSocket(clientId string, jobId string) error {
-	socketDir := filepath.Join("/tmp", fmt.Sprintf("waveterm-%d", os.Getuid()))
+	socketDir := filepath.Join("/tmp", fmt.Sprintf("terminolgy-%d", os.Getuid()))
 	err := os.MkdirAll(socketDir, 0700)
 	if err != nil {
 		return fmt.Errorf("failed to create socket directory: %w", err)

@@ -114,9 +114,9 @@ func MakeBlockShortDesc(block *waveobj.Block) string {
 		}
 		return "cpu graph"
 	case "tips":
-		return "Wave quick tips widget"
+		return "Terminolgy quick tips widget"
 	case "help":
-		return "Wave documentation widget"
+		return "Terminolgy documentation widget"
 	case "launcher":
 		return "placeholder widget used to launch other widgets"
 	case "tsunami":

@@ -27,6 +27,7 @@ Terminolgy is an AI-native terminal for macOS, Linux, and Windows. Built on Elec
 
 - **GPU/Disk/Net Sysinfo** — native system monitoring graphs (not just CPU/memory)
 - **AI Error Analysis** — failed commands automatically trigger AI-powered fix suggestions
+- **NL-to-Command Ghost Text** — type natural language, AI completes the shell command inline
 - **Command Palette** — VS Code-style `Ctrl+Shift+P` for instant access to any action
 - **Compact Headers** — auto-hide block chrome to maximize screen space
 - **Multi-Machine Dashboard** — monitor your entire infrastructure from one terminal
@@ -43,6 +44,11 @@ Terminolgy is an AI-native terminal for macOS, Linux, and Windows. Built on Elec
 - **Auto OS Theme Switching** — follows system light/dark mode automatically
 - **MiniMax AI Preset** — one-click MiniMax model configuration in AI settings
 - **Reveal in Explorer/Finder** — right-click any file path to open it in the system file manager
+- **Session Restore** — reopen Terminolgy exactly where you left off (tabs, blocks, connections)
+- **Cross-Block AI Context** — AI assistant reads output from multiple terminal blocks simultaneously
+- **MCP Host** — built-in Model Context Protocol server; connect any MCP-compatible AI tool
+- **Block Output Sharing** — pipe a block's live output directly into an AI or another block
+- **Global Show/Hide Hotkey** — `CommandOrControl+Shift+Space` to summon/dismiss the window system-wide
 
 ## Install
 
@@ -85,6 +91,8 @@ For detailed build instructions see [BUILD.md](BUILD.md).
 | `Ctrl+Shift+P` | Command palette |
 | `Ctrl+Shift+F` | AI fix for failed command |
 | `Ctrl+Shift+B` | Toggle compact headers |
+| `Tab` | Accept NL-to-command ghost text suggestion |
+| `Ctrl+Shift+Space` | Global show/hide (system-wide hotkey) |
 
 ## Architecture
 
