@@ -77,7 +77,7 @@ export const FakeTermBlock = ({
 const deployMessages = [
     "[1/8] Installing dependencies...",
     "[2/8] Generating TypeScript types from Go...",
-    "[3/8] Building Go backend (wavesrv)...",
+    "[3/8] Building Go backend (terminolgy-srv)...",
     "[4/8] Compiling TypeScript frontend...",
     "[5/8] Bundling Electron renderer...",
     "[6/8] Packaging application artifacts...",

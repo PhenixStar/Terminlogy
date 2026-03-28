@@ -16,7 +16,7 @@ import (
 
 var wavepathCmd = &cobra.Command{
 	Use:     "wavepath {config|data|log}",
-	Short:   "Get paths to various waveterm files and directories",
+	Short:   "Get paths to various terminolgy files and directories",
 	RunE:    wavepathRun,
 	PreRunE: preRunSetupRpcClient,
 }
