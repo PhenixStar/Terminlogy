@@ -137,6 +137,7 @@ type SettingsType struct {
 	PreviewDefaultSort     string `json:"preview:defaultsort,omitempty" jsonschema:"enum=name,enum=modtime"`
 
 	TabPreset       string `json:"tab:preset,omitempty"`
+	TabNewTabLayout any    `json:"tab:newtablayout,omitempty"`
 	TabConfirmClose bool   `json:"tab:confirmclose,omitempty"`
 	TabConnection   string `json:"tab:connection,omitempty"`
 	TabBackground   string `json:"tab:background,omitempty"`

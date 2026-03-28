@@ -223,6 +223,9 @@ func WaveshellLocalEnvVars(termType string) map[string]string {
 	// these are not necessary since they should be set with the swap token, but no harm in setting them here
 	// REBRAND: WAVETERM_* → TERMINOLGY_* env vars injected into local shell sessions
 	rtn["TERM_PROGRAM"] = "terminolgy"                                                   // was "waveterm"
+	if os.Getenv("COLORTERM") == "" {
+		rtn["COLORTERM"] = "truecolor"
+	}
 	rtn["TERMINOLGY"], _ = os.Executable()                                               // was WAVETERM
 	rtn["TERMINOLGY_VERSION"] = wavebase.WaveVersion                                     // was WAVETERM_VERSION
 	rtn["TERMINOLGY_TSHBINDIR"] = filepath.Join(wavebase.GetWaveDataDir(), WaveHomeBinDir) // was WAVETERM_WSHBINDIR

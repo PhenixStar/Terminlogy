@@ -42,3 +42,6 @@ docsite/
 .ruvector/
 plans/
 .service-pids
+.superpowers
+docs/superpowers
+.claude

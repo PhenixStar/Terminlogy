@@ -75,6 +75,30 @@ const WaveAIButton = memo(({ divRef }: { divRef?: React.RefObject<HTMLDivElement
 });
 WaveAIButton.displayName = "WaveAIButton";
 
+const WidgetsSidebarButton = memo(({ divRef }: { divRef?: React.RefObject<HTMLDivElement> }) => {
+    const widgetsSidebarVisible = useAtomValue(WorkspaceLayoutModel.getInstance().widgetsSidebarVisibleAtom);
+
+    const onClick = () => {
+        const current = WorkspaceLayoutModel.getInstance().getWidgetsSidebarVisible();
+        WorkspaceLayoutModel.getInstance().setWidgetsSidebarVisible(!current);
+    };
+
+    return (
+        <Tooltip
+            content="Toggle Widgets Sidebar"
+            placement="bottom"
+            hideOnClick
+            divClassName={`flex h-[22px] px-3.5 justify-end mb-1 items-center rounded-md mr-1 box-border cursor-pointer bg-hover hover:bg-hoverbg transition-colors text-[12px] ${widgetsSidebarVisible ? "text-accent" : "text-secondary"}`}
+            divStyle={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
+            divOnClick={onClick}
+            divRef={divRef}
+        >
+            <i className="fa fa-bars" />
+        </Tooltip>
+    );
+});
+WidgetsSidebarButton.displayName = "WidgetsSidebarButton";
+
 function strArrayIsEqual(a: string[], b: string[]) {
     // null check
     if (a == null && b == null) {
@@ -123,6 +147,7 @@ const TabBar = memo(({ workspace, noTabs }: TabBarProps) => {
     const rightContainerRef = useRef<HTMLDivElement>(null);
     const workspaceSwitcherRef = useRef<HTMLDivElement>(null);
     const waveAIButtonRef = useRef<HTMLDivElement>(null);
+    const widgetsSidebarButtonRef = createRef<HTMLDivElement>();
     const appMenuButtonRef = useRef<HTMLDivElement>(null);
     const tabWidthRef = useRef<number>(TabDefaultWidth);
     const scrollableRef = useRef<boolean>(false);
@@ -190,7 +215,8 @@ const TabBar = memo(({ workspace, noTabs }: TabBarProps) => {
         const addBtnWidth = getOuterWidth(addBtnRef.current);
         const appMenuButtonWidth = appMenuButtonRef.current?.getBoundingClientRect().width ?? 0;
         const workspaceSwitcherWidth = workspaceSwitcherRef.current?.getBoundingClientRect().width ?? 0;
-        const waveAIButtonWidth = waveAIButtonRef.current != null ? getOuterWidth(waveAIButtonRef.current) : 0;
+        const waveAIButtonWidth =
+            !hideAiButton && waveAIButtonRef.current != null ? getOuterWidth(waveAIButtonRef.current) : 0;
 
         const nonTabElementsWidth =
             windowDragLeftWidth +
@@ -277,7 +303,7 @@ const TabBar = memo(({ workspace, noTabs }: TabBarProps) => {
         // Check if all tabs are loaded
         const allLoaded = tabIds.length > 0 && tabIds.every((id) => tabsLoaded[id]);
         if (allLoaded) {
-            setSizeAndPosition(newTabId === null && prevAllLoadedRef.current);
+            setSizeAndPosition(false);
             saveTabsPosition();
             if (!prevAllLoadedRef.current) {
                 prevAllLoadedRef.current = true;
@@ -671,6 +697,7 @@ const TabBar = memo(({ workspace, noTabs }: TabBarProps) => {
             </button>
             <div className="flex-1" />
             <div ref={rightContainerRef} className="flex flex-row gap-1 items-end">
+                <WidgetsSidebarButton divRef={widgetsSidebarButtonRef} />
                 <UpdateStatusBanner />
                 <div
                     className="h-full shrink-0 z-window-drag"
@@ -681,4 +708,4 @@ const TabBar = memo(({ workspace, noTabs }: TabBarProps) => {
     );
 });
 
-export { TabBar, WaveAIButton };
+export { TabBar, WaveAIButton, WidgetsSidebarButton };
