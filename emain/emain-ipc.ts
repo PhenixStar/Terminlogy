@@ -280,6 +280,17 @@ export function initIpcHandlers() {
         event.returnValue = event.sender.getZoomFactor();
     });
 
+    electron.ipcMain.on("get-native-theme", (event) => {
+        event.returnValue = electron.nativeTheme.shouldUseDarkColors;
+    });
+
+    electron.nativeTheme.on("updated", () => {
+        const isDark = electron.nativeTheme.shouldUseDarkColors;
+        for (const win of electron.BrowserWindow.getAllWindows()) {
+            win.webContents.send("native-theme-change", isDark);
+        }
+    });
+
     const hasBeforeInputRegisteredMap = new Map<number, boolean>();
 
     electron.ipcMain.on("webview-focus", (event: Electron.IpcMainEvent, focusedId: number) => {

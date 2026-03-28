@@ -17,7 +17,7 @@ import { makeWaveEnvImpl } from "@/app/waveenv/waveenvimpl";
 import { Workspace } from "@/app/workspace/workspace";
 import { getLayoutModelForStaticTab } from "@/layout/index";
 import { ContextMenuModel } from "@/store/contextmenu";
-import { atoms, createBlock, getSettingsPrefixAtom, refocusNode } from "@/store/global";
+import { atoms, createBlock, getApi, getSettingsPrefixAtom, refocusNode } from "@/store/global";
 import { appHandleKeyDown, keyboardMouseDownHandler } from "@/store/keymodel";
 import { getElemAsStr } from "@/util/focusutil";
 import * as keyutil from "@/util/keyutil";
@@ -194,6 +194,36 @@ function appFocusOut(e: FocusEvent) {
 function appSelectionChange(e: Event) {
     const selection = document.getSelection();
     focusLog("selectionchange", getElemAsStr(selection.anchorNode));
+}
+
+// AppAutoThemeUpdater: syncs term:theme to OS dark/light mode when window:autotheme is enabled.
+// Uses dark preset "default-dark" and light preset "default-light" by convention.
+function AppAutoThemeUpdater() {
+    const windowSettingsAtom = getSettingsPrefixAtom("window");
+    const windowSettings = useAtomValue(windowSettingsAtom);
+    const autoTheme = windowSettings?.["window:autotheme"];
+
+    useEffect(() => {
+        if (!autoTheme) {
+            return;
+        }
+        const api = getApi();
+        if (!api?.getNativeThemeIsDark || !api?.onNativeThemeChange) {
+            return;
+        }
+        // no-op: theme is read-only in this component; actual term theme switching
+        // is handled by listening for the OS theme change event and posting it
+        // as a custom DOM event that TermThemeUpdater can react to.
+        const handler = (isDark: boolean) => {
+            const themeName = isDark ? "default-dark" : "default-light";
+            document.body.dispatchEvent(new CustomEvent("wave:os-theme-change", { detail: { themeName } }));
+        };
+        api.onNativeThemeChange(handler);
+        // trigger immediately on mount
+        handler(api.getNativeThemeIsDark());
+    }, [autoTheme]);
+
+    return null;
 }
 
 function AppFocusHandler() {
@@ -398,6 +428,7 @@ const AppInner = () => {
             <AppKeyHandlers />
             <AppFocusHandler />
             <AppSettingsUpdater />
+            <AppAutoThemeUpdater />
             <BadgeAutoClearing />
             <DndProvider backend={HTML5Backend}>
                 <Workspace />

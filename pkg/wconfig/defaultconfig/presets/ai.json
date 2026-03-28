@@ -16,5 +16,16 @@
         "ai:model": "gpt-5-mini",
         "ai:maxtokens": 4000,
         "ai:timeoutms": 60000
+    },
+    "ai@minimax": {
+        "display:name": "MiniMax",
+        "display:order": 10,
+        "ai:*": true,
+        "ai:provider": "custom",
+        "ai:apitype": "openai-chat",
+        "ai:baseurl": "https://api.minimax.chat/v1",
+        "ai:model": "MiniMax-M1-01",
+        "ai:maxtokens": 4000,
+        "ai:timeoutms": 60000
     }
 }

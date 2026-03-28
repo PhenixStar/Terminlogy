@@ -34,6 +34,11 @@ const (
 	AIProvider_Azure       = "azure"
 	AIProvider_AzureLegacy = "azure-legacy"
 	AIProvider_Custom      = "custom"
+	AIProvider_MiniMax     = "minimax"
+)
+
+const (
+	MiniMaxChatEndpoint = "https://api.minimax.chat/v1/chat/completions"
 )
 
 type UseChatRequest struct {

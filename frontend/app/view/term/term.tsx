@@ -319,6 +319,9 @@ const TerminalView = ({ blockId, model }: ViewComponentProps<TermViewModel>) => 
                 useWebGl: !termSettings?.["term:disablewebgl"],
                 sendDataHandler: model.sendDataToController.bind(model),
                 nodeModel: model.nodeModel,
+                titleChangeHandler: (title: string) => {
+                    globalStore.set(model.termTitleAtom, title || null);
+                },
             }
         );
         (window as any).term = termWrap;

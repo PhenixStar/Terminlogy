@@ -36,6 +36,7 @@ const (
 	GroqAPITokenSecretName        = "GROQ_KEY"
 	AzureOpenAIAPITokenSecretName = "AZURE_OPENAI_KEY"
 	GoogleAIAPITokenSecretName    = "GOOGLE_AI_KEY"
+	MiniMaxAPITokenSecretName     = "MINIMAX_KEY"
 )
 
 func resolveAIMode(requestedMode string, premium bool) (string, *wconfig.AIModeConfigType, error) {
@@ -171,6 +172,17 @@ func applyProviderDefaults(config *wconfig.AIModeConfigType) {
 		}
 		if len(config.Capabilities) == 0 {
 			config.Capabilities = []string{uctypes.AICapabilityTools, uctypes.AICapabilityImages, uctypes.AICapabilityPdfs}
+		}
+	}
+	if config.Provider == uctypes.AIProvider_MiniMax {
+		if config.APIType == "" {
+			config.APIType = uctypes.APIType_OpenAIChat
+		}
+		if config.Endpoint == "" {
+			config.Endpoint = uctypes.MiniMaxChatEndpoint
+		}
+		if config.APITokenSecretName == "" {
+			config.APITokenSecretName = MiniMaxAPITokenSecretName
 		}
 	}
 	if config.APIType == "" {

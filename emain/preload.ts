@@ -72,6 +72,9 @@ contextBridge.exposeInMainWorld("api", {
     doRefresh: () => ipcRenderer.send("do-refresh"),
     saveTextFile: (fileName: string, content: string) => ipcRenderer.invoke("save-text-file", fileName, content),
     setIsActive: () => ipcRenderer.invoke("set-is-active"),
+    getNativeThemeIsDark: () => ipcRenderer.sendSync("get-native-theme") as boolean,
+    onNativeThemeChange: (callback: (isDark: boolean) => void) =>
+        ipcRenderer.on("native-theme-change", (_event, isDark: boolean) => callback(isDark)),
 });
 
 // Custom event for "new-window"

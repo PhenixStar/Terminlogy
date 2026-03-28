@@ -85,6 +85,7 @@ export class TermViewModel implements ViewModel {
     termConfigedDurable: jotai.Atom<null | boolean>;
     searchAtoms?: SearchAtoms;
     aiFixRequestedAtom: jotai.PrimitiveAtom<boolean>;
+    termTitleAtom: jotai.PrimitiveAtom<string | null>;
 
     constructor({ blockId, nodeModel, tabModel }: ViewModelInitType) {
         this.viewType = "term";
@@ -109,6 +110,7 @@ export class TermViewModel implements ViewModel {
         });
         this.isRestarting = jotai.atom(false);
         this.aiFixRequestedAtom = jotai.atom(false);
+        this.termTitleAtom = jotai.atom<string | null>(null) as jotai.PrimitiveAtom<string | null>;
         this.viewIcon = jotai.atom((get) => {
             const termMode = get(this.termMode);
             if (termMode == "vdom") {
@@ -125,6 +127,11 @@ export class TermViewModel implements ViewModel {
             }
             if (blockData?.meta?.controller == "cmd") {
                 return "";
+            }
+            // Dynamic tab title: show process name from OSC 0/2 if no manual frame:title is set
+            const dynamicTitle = get(this.termTitleAtom);
+            if (dynamicTitle) {
+                return dynamicTitle;
             }
             return "";
         });

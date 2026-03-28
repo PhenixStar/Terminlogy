@@ -6,6 +6,10 @@
     height: 100%;
     width: 100%;
     overflow: hidden;
+    // Kaku-inspired: gap background follows window opacity.
+    // Uses the same formula as body background so split dividers are semi-transparent
+    // when window opacity < 1 (window:transparent or window:blur settings).
+    background: rgb(from var(--main-bg-color) r g b / var(--window-opacity, 1));
 
     --gap-size-px: 5px;
 
@@ -139,6 +143,11 @@
     .overlay-leaf {
         height: 100%;
         width: 100%;
+    }
+
+    // When window is fully transparent, make tile-layout background transparent too
+    .is-transparent & {
+        background: transparent;
     }
 
     .placeholder {

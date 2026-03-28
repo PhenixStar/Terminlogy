@@ -67,6 +67,7 @@ type TermWrapOptions = {
     useSixel?: boolean;
     sendDataHandler?: (data: string) => void;
     nodeModel?: BlockNodeModel;
+    titleChangeHandler?: (title: string) => void;
 };
 
 export class TermWrap {
@@ -297,6 +298,13 @@ export class TermWrap {
         this.heldData = [];
         this.handleResize_debounced = debounce(50, this.handleResize.bind(this));
         this.terminal.open(this.connectElem);
+        if (waveOptions.titleChangeHandler) {
+            this.toDispose.push(
+                this.terminal.onTitleChange((title: string) => {
+                    waveOptions.titleChangeHandler(title);
+                })
+            );
+        }
         this.handleResize();
         const pasteHandler = this.pasteHandler.bind(this);
         this.connectElem.addEventListener("paste", pasteHandler, true);

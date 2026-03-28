@@ -135,6 +135,8 @@ declare global {
         doRefresh: () => void; // do-refresh
         saveTextFile: (fileName: string, content: string) => Promise<boolean>; // save-text-file
         setIsActive: () => Promise<void>; // set-is-active
+        getNativeThemeIsDark: () => boolean; // get-native-theme
+        onNativeThemeChange: (callback: (isDark: boolean) => void) => void; // native-theme-change
     };
 
     type ElectronContextMenuItem = {

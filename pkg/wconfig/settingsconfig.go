@@ -145,6 +145,7 @@ type SettingsType struct {
 	WidgetShowHelp *bool `json:"widget:showhelp,omitempty"`
 
 	WindowClear                         bool     `json:"window:*,omitempty"`
+	WindowAutoTheme                     bool     `json:"window:autotheme,omitempty"`
 	WindowFullscreenOnLaunch            bool     `json:"window:fullscreenonlaunch,omitempty"`
 	WindowTransparent                   bool     `json:"window:transparent,omitempty"`
 	WindowBlur                          bool     `json:"window:blur,omitempty"`
@@ -300,7 +301,7 @@ type AIModeConfigType struct {
 	DisplayOrder       float64  `json:"display:order,omitempty"`
 	DisplayIcon        string   `json:"display:icon,omitempty"`
 	DisplayDescription string   `json:"display:description,omitempty"`
-	Provider           string   `json:"ai:provider,omitempty" jsonschema:"enum=wave,enum=google,enum=groq,enum=openrouter,enum=nanogpt,enum=openai,enum=azure,enum=azure-legacy,enum=custom"`
+	Provider           string   `json:"ai:provider,omitempty" jsonschema:"enum=wave,enum=google,enum=groq,enum=openrouter,enum=nanogpt,enum=openai,enum=azure,enum=azure-legacy,enum=custom,enum=minimax"`
 	APIType            string   `json:"ai:apitype,omitempty" jsonschema:"enum=google-gemini,enum=openai-responses,enum=openai-chat"`
 	Model              string   `json:"ai:model,omitempty"`
 	ThinkingLevel      string   `json:"ai:thinkinglevel,omitempty" jsonschema:"enum=low,enum=medium,enum=high"`
