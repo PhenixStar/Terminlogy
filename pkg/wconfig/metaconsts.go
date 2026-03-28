@@ -60,6 +60,7 @@ const (
 	ConfigKey_TermOsc52                      = "term:osc52"
 	ConfigKey_TermDurable                    = "term:durable"
 	ConfigKey_TermAiErrorAnalysis            = "term:aierroranalysis"
+	ConfigKey_TermNlCommand                  = "term:nlcommand"
 	ConfigKey_TermCloseOnLastTermClose       = "term:closeonlasttermclose"
 
 	ConfigKey_EditorMinimapEnabled           = "editor:minimapenabled"
@@ -86,6 +87,7 @@ const (
 	ConfigKey_PreviewDefaultSort             = "preview:defaultsort"
 
 	ConfigKey_TabPreset                      = "tab:preset"
+	ConfigKey_TabNewTabLayout                = "tab:newtablayout"
 	ConfigKey_TabConfirmClose                = "tab:confirmclose"
 	ConfigKey_TabConnection                  = "tab:connection"
 	ConfigKey_TabBackground                  = "tab:background"
@@ -94,6 +96,7 @@ const (
 	ConfigKey_WidgetShowHelp                 = "widget:showhelp"
 
 	ConfigKey_WindowClear                    = "window:*"
+	ConfigKey_WindowAutoTheme                = "window:autotheme"
 	ConfigKey_WindowFullscreenOnLaunch       = "window:fullscreenonlaunch"
 	ConfigKey_WindowTransparent              = "window:transparent"
 	ConfigKey_WindowBlur                     = "window:blur"

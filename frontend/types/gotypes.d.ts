@@ -1446,12 +1446,14 @@ declare global {
         "preview:showhiddenfiles"?: boolean;
         "preview:defaultsort"?: string;
         "tab:preset"?: string;
+        "tab:newtablayout"?: any;
         "tab:confirmclose"?: boolean;
         "tab:connection"?: string;
         "tab:background"?: string;
         "widget:*"?: boolean;
         "widget:showhelp"?: boolean;
         "window:*"?: boolean;
+        "window:autotheme"?: boolean;
         "window:fullscreenonlaunch"?: boolean;
         "window:transparent"?: boolean;
         "window:blur"?: boolean;

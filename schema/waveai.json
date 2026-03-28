@@ -26,7 +26,8 @@
             "openai",
             "azure",
             "azure-legacy",
-            "custom"
+            "custom",
+            "minimax"
           ]
         },
         "ai:apitype": {
