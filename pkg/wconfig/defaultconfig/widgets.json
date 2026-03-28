@@ -40,5 +40,17 @@
                 "view": "sysinfo"
             }
         }
+    },
+    "defwidget@ai-config": {
+        "display:order": 14,
+        "icon": "brain",
+        "color": "#8b5cf6",
+        "label": "ai-setup",
+        "description": "AI provider configuration status — models, keys, endpoints",
+        "blockdef": {
+            "meta": {
+                "view": "waveconfig"
+            }
+        }
     }
 }

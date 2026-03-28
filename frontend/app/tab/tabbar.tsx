@@ -2,7 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Tooltip } from "@/app/element/tooltip";
+import { globalStore } from "@/app/store/jotaiStore";
+import * as services from "@/store/services";
 import { TabRpcClient } from "@/app/store/wshrpcutil";
+import { getWaveObjectAtom, makeORef } from "@/app/store/wos";
 import { useWaveEnv } from "@/app/waveenv/waveenv";
 import { WorkspaceLayoutModel } from "@/app/workspace/workspace-layout-model";
 import { deleteLayoutModelForTab } from "@/layout/index";
@@ -567,17 +570,46 @@ const TabBar = memo(({ workspace, noTabs }: TabBarProps) => {
 
     const handleCloseTab = (event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null, tabId: string) => {
         event?.stopPropagation();
-        env.electron
-            .closeTab(workspace.oid, tabId, confirmClose)
-            .then((didClose) => {
-                if (didClose) {
-                    tabsWrapperRef.current?.style.setProperty("--tabs-wrapper-transition", "width 0.3s ease");
-                    deleteLayoutModelForTab(tabId);
+        // Check for running processes in this tab before closing
+        const tabAtom = getWaveObjectAtom<Tab>(makeORef("tab", tabId));
+        const tabData = globalStore.get(tabAtom);
+        const blockIds = tabData?.blockids ?? [];
+        const doClose = (skipConfirm: boolean) => {
+            env.electron
+                .closeTab(workspace.oid, tabId, !skipConfirm && confirmClose)
+                .then((didClose) => {
+                    if (didClose) {
+                        tabsWrapperRef.current?.style.setProperty("--tabs-wrapper-transition", "width 0.3s ease");
+                        deleteLayoutModelForTab(tabId);
+                    }
+                })
+                .catch((e) => {
+                    console.log("error closing tab", e);
+                });
+        };
+        if (blockIds.length === 0) {
+            doClose(false);
+            return;
+        }
+        Promise.all(blockIds.map((bid) => services.BlockService.GetControllerStatus(bid).catch(() => null)))
+            .then((statuses) => {
+                const hasRunning = statuses.some((s) => s?.shellprocstatus === "running");
+                if (hasRunning) {
+                    // Show confirmation — bypass confirmClose (already implied by running process)
+                    env.electron
+                        .closeTab(workspace.oid, tabId, true)
+                        .then((didClose) => {
+                            if (didClose) {
+                                tabsWrapperRef.current?.style.setProperty("--tabs-wrapper-transition", "width 0.3s ease");
+                                deleteLayoutModelForTab(tabId);
+                            }
+                        })
+                        .catch((e) => console.log("error closing tab", e));
+                } else {
+                    doClose(false);
                 }
             })
-            .catch((e) => {
-                console.log("error closing tab", e);
-            });
+            .catch(() => doClose(false));
     };
 
     const handleTabLoaded = useCallback((tabId: string) => {

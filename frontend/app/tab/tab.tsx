@@ -5,6 +5,7 @@ import { getTabBadgeAtom } from "@/app/store/badge";
 import { refocusNode } from "@/app/store/global";
 import { RpcApi } from "@/app/store/wshclientapi";
 import { TabRpcClient } from "@/app/store/wshrpcutil";
+import { waveEventSubscribeSingle } from "@/app/store/wps";
 import { WaveEnv, WaveEnvSubset, useWaveEnv } from "@/app/waveenv/waveenv";
 import { Button } from "@/element/button";
 import { validateCssColor } from "@/util/color-validator";
@@ -12,7 +13,7 @@ import { fireAndForget } from "@/util/util";
 import clsx from "clsx";
 import { useAtomValue } from "jotai";
 import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { makeORef } from "../store/wos";
+import { getWaveObjectAtom, makeORef } from "../store/wos";
 import { TabBadges } from "./tabbadges";
 import "./tab.scss";
 import { buildTabContextMenu } from "./tabcontextmenu";
@@ -43,6 +44,7 @@ interface TabVProps {
     badges?: Badge[] | null;
     flagColor?: string | null;
     connection?: string | null;
+    hasCompletedBlock?: boolean;
     onClick: () => void;
     onMouseEnter?: () => void;
     onClose: (event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null) => void;
@@ -65,6 +67,7 @@ const TabV = forwardRef<HTMLDivElement, TabVProps>((props, ref) => {
         badges,
         flagColor,
         connection,
+        hasCompletedBlock,
         onClick,
         onMouseEnter,
         onClose,
@@ -217,6 +220,21 @@ const TabV = forwardRef<HTMLDivElement, TabVProps>((props, ref) => {
                         style={{ fontSize: "10px", opacity: 0.6, marginLeft: "3px", marginRight: "2px" }}
                     />
                 )}
+                {hasCompletedBlock && !active && (
+                    <span
+                        title="A command finished in this tab"
+                        style={{
+                            display: "inline-block",
+                            width: "6px",
+                            height: "6px",
+                            borderRadius: "50%",
+                            backgroundColor: "#22c55e",
+                            marginLeft: "3px",
+                            marginRight: "1px",
+                            flexShrink: 0,
+                        }}
+                    />
+                )}
                 <Button
                     className="ghost grey close"
                     onClick={onClose}
@@ -251,6 +269,33 @@ const TabInner = forwardRef<HTMLDivElement, TabProps>((props, ref) => {
     const env = useWaveEnv<TabEnv>();
     const [tabData, _] = env.wos.useWaveObjectValue<Tab>(makeORef("tab", id));
     const badges = useAtomValue(getTabBadgeAtom(id, env));
+    const [hasCompletedBlock, setHasCompletedBlock] = useState(false);
+
+    // Track block completion: subscribe to controllerstatus events for this tab's blocks
+    useEffect(() => {
+        const blockIds = tabData?.blockids ?? [];
+        if (blockIds.length === 0) return;
+        const unsubs = blockIds.map((blockId) =>
+            waveEventSubscribeSingle({
+                eventType: "controllerstatus",
+                scope: makeORef("block", blockId),
+                handler: (event) => {
+                    const data = event.data as BlockControllerRuntimeStatus;
+                    if (data?.shellprocstatus === "done") {
+                        setHasCompletedBlock(true);
+                    }
+                },
+            })
+        );
+        return () => unsubs.forEach((fn) => fn());
+    }, [tabData?.blockids]);
+
+    // Clear the dot when this tab becomes active
+    useEffect(() => {
+        if (active) {
+            setHasCompletedBlock(false);
+        }
+    }, [active]);
 
     const rawFlagColor = tabData?.meta?.["tab:flagcolor"];
     let flagColor: string | null = null;
@@ -311,6 +356,7 @@ const TabInner = forwardRef<HTMLDivElement, TabProps>((props, ref) => {
             badges={badges}
             flagColor={flagColor}
             connection={connection}
+            hasCompletedBlock={hasCompletedBlock}
             onClick={handleTabClick}
             onMouseEnter={onMouseEnter}
             onClose={onClose}

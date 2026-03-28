@@ -959,12 +959,14 @@ export function registerGlobalHotkey(rawGlobalHotKey: string) {
         const electronHotKey = waveKeyToElectronKey(rawGlobalHotKey);
         console.log("registering globalhotkey of ", electronHotKey);
         globalShortcut.register(electronHotKey, () => {
-            const selectedWindow = focusedWaveWindow;
             const firstWaveWindow = getAllWaveWindows()[0];
-            if (focusedWaveWindow) {
-                selectedWindow.focus();
-            } else if (firstWaveWindow) {
-                firstWaveWindow.focus();
+            if (firstWaveWindow) {
+                if (firstWaveWindow.isVisible() && firstWaveWindow.isFocused()) {
+                    firstWaveWindow.hide();
+                } else {
+                    firstWaveWindow.show();
+                    firstWaveWindow.focus();
+                }
             } else {
                 fireAndForget(createNewWaveWindow);
             }

@@ -442,7 +442,7 @@ async function appMain() {
             }
         });
     });
-    const rawGlobalHotKey = launchSettings?.["app:globalhotkey"];
+    const rawGlobalHotKey = fullConfig?.settings?.["app:globalhotkey"] ?? launchSettings?.["app:globalhotkey"] ?? "CommandOrControl+Shift+Space";
     if (rawGlobalHotKey) {
         registerGlobalHotkey(rawGlobalHotKey);
     }

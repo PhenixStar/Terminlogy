@@ -3,6 +3,7 @@
     "ai:model": "gpt-5-mini",
     "ai:maxtokens": 4000,
     "ai:timeoutms": 60000,
+    "app:globalhotkey": "CommandOrControl+Shift+Space",
     "app:defaultnewblock": "term",
     "app:tabbar": "top",
     "app:confirmquit": true,
