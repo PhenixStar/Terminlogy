@@ -212,6 +212,7 @@ const TabBar = memo(({ workspace, noTabs }: TabBarProps) => {
             return rect.width + parseFloat(style.marginLeft) + parseFloat(style.marginRight);
         };
 
+        if (!tabbarWrapperRef.current || !draggerLeftRef.current || !addBtnRef.current) return;
         const tabbarWrapperWidth = tabbarWrapperRef.current.getBoundingClientRect().width;
         const windowDragLeftWidth = draggerLeftRef.current.getBoundingClientRect().width;
         const rightContainerWidth = rightContainerRef.current?.getBoundingClientRect().width ?? 0;
@@ -453,8 +454,8 @@ const TabBar = memo(({ workspace, noTabs }: TabBarProps) => {
 
             // Update visual positions of the tabs
             tabIds.forEach((localTabId, index) => {
-                const ref = tabRefs.current.find((ref) => ref.current.dataset.tabId === localTabId);
-                if (ref.current && localTabId !== tabId) {
+                const ref = tabRefs.current.find((ref) => ref.current?.dataset.tabId === localTabId);
+                if (ref?.current && localTabId !== tabId) {
                     ref.current.style.transform = `translate3d(${index * tabWidth}px,0,0)`;
                     ref.current.classList.add("animate");
                 }
@@ -516,7 +517,6 @@ const TabBar = memo(({ workspace, noTabs }: TabBarProps) => {
             const tabIndex = tabIds.indexOf(tabId);
             const tabStartX = dragStartPositions[tabIndex]; // Starting X position of the tab
 
-            console.log("handleDragStart", tabId, tabIndex, tabStartX);
             if (ref.current) {
                 draggingTabDataRef.current = {
                     tabId: ref.current.dataset.tabId,

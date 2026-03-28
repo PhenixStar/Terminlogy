@@ -105,6 +105,7 @@ export class NlGhostText {
     }
 
     private hide() {
+        this.lastQuery = "";
         globalStore.set(this.stateAtom, { visible: false, command: "", loading: false, query: "" });
     }
 

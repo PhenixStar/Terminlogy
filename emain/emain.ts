@@ -442,10 +442,12 @@ async function appMain() {
             }
         });
     });
-    const rawGlobalHotKey = fullConfig?.settings?.["app:globalhotkey"] ?? launchSettings?.["app:globalhotkey"] ?? "CommandOrControl+Shift+Space";
-    if (rawGlobalHotKey) {
-        registerGlobalHotkey(rawGlobalHotKey);
-    }
+    // Prefer live settings, fall back to launch settings, then built-in default.
+    const rawGlobalHotKey =
+        fullConfig?.settings?.["app:globalhotkey"] ??
+        launchSettings?.["app:globalhotkey"] ??
+        "CommandOrControl+Shift+Space";
+    registerGlobalHotkey(rawGlobalHotKey);
 }
 
 appMain().catch((e) => {

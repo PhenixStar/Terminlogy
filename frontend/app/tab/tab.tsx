@@ -271,7 +271,9 @@ const TabInner = forwardRef<HTMLDivElement, TabProps>((props, ref) => {
     const badges = useAtomValue(getTabBadgeAtom(id, env));
     const [hasCompletedBlock, setHasCompletedBlock] = useState(false);
 
-    // Track block completion: subscribe to controllerstatus events for this tab's blocks
+    // Track block completion: subscribe to controllerstatus events for this tab's blocks.
+    // Stabilize the dep with a joined string to avoid re-subscribing on every tabData reference change.
+    const blockIdsKey = (tabData?.blockids ?? []).join(",");
     useEffect(() => {
         const blockIds = tabData?.blockids ?? [];
         if (blockIds.length === 0) return;
@@ -288,7 +290,8 @@ const TabInner = forwardRef<HTMLDivElement, TabProps>((props, ref) => {
             })
         );
         return () => unsubs.forEach((fn) => fn());
-    }, [tabData?.blockids]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [blockIdsKey]);
 
     // Clear the dot when this tab becomes active
     useEffect(() => {

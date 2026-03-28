@@ -337,8 +337,6 @@ const TerminalView = ({ blockId, model }: ViewComponentProps<TermViewModel>) => 
                                 model.sendDataToController("\x01\x0b" + command);
                             });
                             if (accepted) {
-                                event.preventDefault();
-                                event.stopPropagation();
                                 return false;
                             }
                         } else if (event.key === "Escape") {
