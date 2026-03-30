@@ -48,3 +48,14 @@ const (
 	Command_StreamData                   = "streamdata"
 	Command_StreamDataAck                = "streamdataack"
 )
+
+// Terminolgy custom TimeSeries constants (not in upstream)
+const (
+	TimeSeries_Disk = "disk"
+	TimeSeries_Net  = "net"
+)
+
+const (
+	TimeSeries_Gpu    = "gpu"
+	TimeSeries_GpuMem = "gpu:mem"
+)
